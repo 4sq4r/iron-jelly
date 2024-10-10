@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /iron-jelly/api
+spring:
+  application:
+    name: iron-jelly
+  datasource:
+    url:
+    username: iron_jelly
+    password: i2n3c#&kans%a
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
