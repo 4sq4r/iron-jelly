@@ -6,9 +6,9 @@ spring:
   application:
     name: iron-jelly
   datasource:
-    url:
+    url: jdbc:postgresql://localhost:5432/postgres
     username: iron_jelly
-    password: i2n3c#&kans%a
+    password: i2n3cx13ans2612a
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
