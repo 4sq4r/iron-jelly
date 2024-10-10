@@ -14,4 +14,4 @@ spring:
     hibernate:
       ddl-auto: create
     database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect #test-github-action
