@@ -1,7 +1,8 @@
 package com.iron_jelly.util;
 
 public enum MessageSource {
-    ;
+    USERNAME_ALREADY_EXISTS("Username already exists."),
+    USER_NOT_FOUND("User not found.");
 
     private String text;
 
