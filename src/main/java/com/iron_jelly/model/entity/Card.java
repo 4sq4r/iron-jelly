@@ -13,14 +13,11 @@ public class Card extends Base {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)
     private User user;
-    @Column(name = "card_number", nullable = false)
-    private Integer cardNumber;
     @Column(name = "isActive", nullable = false)
     boolean isActive = true;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "card_template_id", referencedColumnName = "card_template_id", nullable = false)
     private CardTemplate cardTemplate;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "limit", referencedColumnName = "limit")
-    private CardTemplate limit;
+    private int limit;
 }

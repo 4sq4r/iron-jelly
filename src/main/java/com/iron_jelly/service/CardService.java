@@ -18,10 +18,11 @@ public class CardService {
     private final CardMapper cardMapper;
 
     public CardDTO saveOne(CardDTO cardDTO) {
+        if (cardDTO.getUserId() == null || cardDTO.getCompanyId() == null) {
+            throw new IllegalArgumentException("Both userId and companyId must not be null.");
+        }
         Card card = cardMapper.toEntity(cardDTO);
         Card savedCard = cardRepository.save(card);
-        String formattedCardNumber = String.format("%08d", savedCard.getCardNumber());
-        cardDTO.setCardNumber(Integer.valueOf(formattedCardNumber));
 
         return cardMapper.toDTO(savedCard);
     }
@@ -41,5 +42,22 @@ public class CardService {
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.CARD_NOT_FOUND.getText())
                         .build());
+    }
+
+    public void deactivateCard(Card card) {
+        card.setActive(false);
+    }
+
+    public void useCard(Card card) {
+        if(!card.isActive()) {
+            throw new IllegalStateException("Card is not active and cannot be used.");
+        }
+
+        int currentLimit = card.getLimit();
+        card.setLimit(currentLimit - 1);
+
+        if (card.getLimit() == 0) {
+            deactivateCard(card);
+        }
     }
 }
