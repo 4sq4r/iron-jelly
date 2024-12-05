@@ -45,7 +45,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
-    private User findById(UUID id) {
+    public User findById(UUID id) {
         return userRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
