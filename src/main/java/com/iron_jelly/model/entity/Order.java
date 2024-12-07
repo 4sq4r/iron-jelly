@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 public class Order extends Base {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "card_number", referencedColumnName = "card_number", nullable = false)
+    @JoinColumn(name = "card_id", referencedColumnName = "card_id", nullable = false)
     private Card card;
     @Column(name = "isFree", nullable = false)
     boolean isFree = false;

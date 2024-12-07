@@ -19,5 +19,5 @@ public class Card extends Base {
     @JoinColumn(name = "card_template_id", referencedColumnName = "card_template_id", nullable = false)
     private CardTemplate cardTemplate;
     @JoinColumn(name = "limit", referencedColumnName = "limit")
-    private int limit;
+    private Integer limit;
 }

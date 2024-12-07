@@ -24,13 +24,13 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public CompanyDTO getOne(@PathVariable UUID id) {
+    public CompanyDTO getOne(@PathVariable long id) {
         log.info("Incoming request to get company with id: {}", id);
         return companyService.getOne(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable UUID id) {
+    public void deleteOne(@PathVariable long id) {
         log.info("Incoming request to delete company with id: {}", id);
         companyService.deleteOne(id);
     }

@@ -18,21 +18,14 @@ public class CardTemplateService {
 
     private final CardTemplateRepository cardTemplateRepository;
     private final CardTemplateMapper cardTemplateMapper;
-    private final CompanyRepository companyRepository;
+    private final CompanyService companyService;
 
     public CardTemplateDTO saveOne(CardTemplateDTO cardTemplateDTO) {
-        Company company = companyRepository.findById(cardTemplateDTO.getCompanyId())
-                .orElseThrow(() -> CustomException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message("Компания с указанным ID не найдена.")
-                        .build());
+
+        Company company = companyService.findById(cardTemplateDTO.getCompanyId());
 
         CardTemplate cardTemplate = cardTemplateMapper.toEntity(cardTemplateDTO);
         cardTemplate.setCompany(company);
-        cardTemplate.setName(cardTemplateDTO.getName());
-        cardTemplate.setLimit(cardTemplateDTO.getLimit());
-        cardTemplate.setExpireDays(cardTemplateDTO.getExpireDays());
-        cardTemplate.setDescription(cardTemplateDTO.getDescription());
         CardTemplate savedCardTemplate = cardTemplateRepository.save(cardTemplate);
 
         return cardTemplateMapper.toDTO(savedCardTemplate);

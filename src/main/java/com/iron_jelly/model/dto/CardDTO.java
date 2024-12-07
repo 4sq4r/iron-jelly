@@ -10,7 +10,7 @@ import java.util.UUID;
 public class CardDTO extends BaseDTO {
 
     @NotNull
-    private UUID userId;
+    private Long userId;
     @NotNull
-    private UUID companyId;
+    private Long companyId;
 }

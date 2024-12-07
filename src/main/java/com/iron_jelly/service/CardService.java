@@ -16,27 +16,30 @@ import java.util.UUID;
 public class CardService {
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
+    private final OrderService orderService;
+    private final UserService userService;
+    public final CompanyService companyService;
 
     public CardDTO saveOne(CardDTO cardDTO) {
-        if (cardDTO.getUserId() == null || cardDTO.getCompanyId() == null) {
-            throw new IllegalArgumentException("Both userId and companyId must not be null.");
-        }
+        userService.findById(cardDTO.getUserId());
+        companyService.findById(cardDTO.getCompanyId());
+
         Card card = cardMapper.toEntity(cardDTO);
         Card savedCard = cardRepository.save(card);
 
         return cardMapper.toDTO(savedCard);
     }
 
-    public CardDTO getOne(UUID id) {
+    public CardDTO getOne(long id) {
         return cardMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(UUID id) {
+    public void deleteOne(long id) {
         Card card = findById(id);
         cardRepository.delete(card);
     }
 
-    public Card findById(UUID id) {
+    public Card findById(long id) {
         return cardRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
@@ -58,6 +61,7 @@ public class CardService {
 
         if (card.getLimit() == 0) {
             deactivateCard(card);
+            orderService.createFreeOrder(card);
         }
     }
 }
