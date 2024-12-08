@@ -3,13 +3,13 @@ package com.iron_jelly.service;
 import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.UserMapper;
 import com.iron_jelly.model.dto.UserDTO;
+import com.iron_jelly.model.entity.Admin;
 import com.iron_jelly.model.entity.User;
 import com.iron_jelly.repository.UserRepository;
 import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -35,20 +35,31 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public UserDTO getOne(long id) {
+    public UserDTO getOne(Long id) {
         return userMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(long id) {
+    public void deleteOne(Long id) {
         User user = findById(id);
         userRepository.delete(user);
     }
 
-    public User findById(long id) {
+    public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.USER_NOT_FOUND.getText())
                         .build());
+    }
+
+    public Admin makeAdmin(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        Admin admin = new Admin();
+        admin.setUsername(user.getUsername());
+        admin.setPassword(user.getPassword());
+        return admin;
+        //как админу присвоится его компания ?
     }
 }

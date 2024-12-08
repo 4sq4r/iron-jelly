@@ -7,8 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @Slf4j
 @RestController
 @RequestMapping("/users/v1")
@@ -24,13 +22,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDTO getOne(@PathVariable long id) {
+    public UserDTO getOne(@PathVariable Long id) {
         log.info("Incoming request to get user with id: {}", id);
         return userService.getOne(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable long id) {
+    public void deleteOne(@PathVariable Long id) {
         log.info("Incoming request to delete user with id: {}", id);
         userService.deleteOne(id);
     }

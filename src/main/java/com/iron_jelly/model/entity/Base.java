@@ -14,7 +14,7 @@ public class Base implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
-    @Column(name = "external_id")
+    @Column(name = "external_id", nullable = false, unique = true, updatable = false)
     private UUID externalId;
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;

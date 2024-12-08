@@ -18,6 +18,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final CardService cardService;
 
     public OrderDTO saveOne(OrderDTO orderDTO) {
         Order order = orderMapper.toEntity(orderDTO);
@@ -26,11 +27,11 @@ public class OrderService {
         return orderMapper.toDTO(savedOrder);
     }
 
-    public OrderDTO getOne(long id) {
+    public OrderDTO getOne(Long id) {
         return orderMapper.toDTO(findById(id));
     }
 
-    private Order findById(long id) {
+    private Order findById(Long id) {
         return orderRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
@@ -47,8 +48,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void giveFreeOrder(Order order) {
-        // Найти заказ по ID
+    public void useFreeOrder(Order order) {
         Order existingOrder = orderRepository.findById(order.getId()).orElseThrow(() ->
                 CustomException.builder()
                         .httpStatus(HttpStatus.NOT_FOUND)
@@ -56,7 +56,6 @@ public class OrderService {
                         .build()
         );
 
-        // Проверить, является ли заказ бесплатным
         if (!existingOrder.isFree()) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
@@ -64,10 +63,11 @@ public class OrderService {
                     .build();
         }
 
-        // Обновить статус заказа на не бесплатный
         existingOrder.setFree(false);
-
-        // Сохранить изменения
         orderRepository.save(existingOrder);
+
+        Card card = order.getCard();
+        card.setActive(false);
+        cardService.deleteOne(card.getId());
     }
 }

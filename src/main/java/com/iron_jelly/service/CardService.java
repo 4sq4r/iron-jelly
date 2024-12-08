@@ -9,7 +9,6 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,16 +29,16 @@ public class CardService {
         return cardMapper.toDTO(savedCard);
     }
 
-    public CardDTO getOne(long id) {
+    public CardDTO getOne(Long id) {
         return cardMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(long id) {
+    public void deleteOne(Long id) {
         Card card = findById(id);
         cardRepository.delete(card);
     }
 
-    public Card findById(long id) {
+    public Card findById(Long id) {
         return cardRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
@@ -53,14 +52,16 @@ public class CardService {
 
     public void useCard(Card card) {
         if(!card.isActive()) {
-            throw new IllegalStateException("Card is not active and cannot be used.");
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.CARD_IS_NOT_ACTIVE.getText())
+                    .build();
         }
 
         int currentLimit = card.getLimit();
         card.setLimit(currentLimit - 1);
 
         if (card.getLimit() == 0) {
-            deactivateCard(card);
             orderService.createFreeOrder(card);
         }
     }

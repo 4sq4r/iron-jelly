@@ -18,18 +18,18 @@ public class CardController {
 
     @PostMapping
     public CardDTO saveOne(@RequestBody @Valid CardDTO cardDTO) {
-        log.info("Incoming request to save card: {}", cardDTO.getId());
+        log.info("Incoming request to save card by user: {}", cardDTO.getUserId());
         return cardService.saveOne(cardDTO);
     }
 
     @GetMapping("/{id}")
-    public CardDTO getOne(@PathVariable long id) {
+    public CardDTO getOne(@PathVariable Long id) {
         log.info("Incoming request to get card with id: {}", id);
         return cardService.getOne(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable long id) {
+    public void deleteOne(@PathVariable Long id) {
         log.info("Incoming request to delete card with id: {}", id);
         cardService.deleteOne(id);
     }

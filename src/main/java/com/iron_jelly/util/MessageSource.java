@@ -7,7 +7,8 @@ public enum MessageSource {
     CARD_NOT_FOUND("Card not found"),
     CARD_TEMPLATE_NOT_FOUND("Card template not found"),
     COMPANY_NOT_FOUND("Company not found"),
-    ORDER_NOT_FOUND("Order not found");
+    ORDER_NOT_FOUND("Order not found"),
+    CARD_IS_NOT_ACTIVE("Карта не активна");
 
     private String text;
 
