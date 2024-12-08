@@ -52,14 +52,14 @@ public class UserService {
                         .build());
     }
 
-    public Admin makeAdmin(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-        Admin admin = new Admin();
-        admin.setUsername(user.getUsername());
-        admin.setPassword(user.getPassword());
-        return admin;
-        //как админу присвоится его компания ?
-    }
+//    public Admin makeAdmin(User user) {
+//        if (user == null) {
+//            throw new IllegalArgumentException("User cannot be null");
+//        }
+//        Admin admin = new Admin();
+//        admin.setUsername(user.getUsername());
+//        admin.setPassword(user.getPassword());
+//        return admin;
+//        //как админу присвоится его компания ?
+//    }
 }
