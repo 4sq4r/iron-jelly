@@ -3,7 +3,7 @@ package com.iron_jelly.service;
 import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.UserMapper;
 import com.iron_jelly.model.dto.UserDTO;
-import com.iron_jelly.model.entity.Admin;
+//import com.iron_jelly.model.entity.Admin;
 import com.iron_jelly.model.entity.User;
 import com.iron_jelly.repository.UserRepository;
 import com.iron_jelly.util.MessageSource;
