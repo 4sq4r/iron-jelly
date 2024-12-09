@@ -11,6 +11,9 @@
 //public class Admin extends User {
 //
 //    @OneToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "company", referencedColumnName = "company_name")
+//    private Company companyName;
+//    @OneToOne(fetch = FetchType.LAZY, optional = false)
 //    @JoinColumn(name = "company_id", referencedColumnName = "id")
 //    private Company companyId;
 //}

@@ -18,7 +18,6 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final CardService cardService;
 
     public OrderDTO saveOne(OrderDTO orderDTO) {
         Order order = orderMapper.toEntity(orderDTO);
@@ -31,14 +30,6 @@ public class OrderService {
         return orderMapper.toDTO(findById(id));
     }
 
-    private Order findById(Long id) {
-        return orderRepository.findById(id).orElseThrow(
-                () -> CustomException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message(MessageSource.ORDER_NOT_FOUND.getText())
-                        .build());
-    }
-
     public Order createFreeOrder(Card card) {
         Order order = new Order();
         order.setCard(card);
@@ -48,13 +39,8 @@ public class OrderService {
     }
 
     @Transactional
-    public void useFreeOrder(Order order) {
-        Order existingOrder = orderRepository.findById(order.getId()).orElseThrow(() ->
-                CustomException.builder()
-                        .httpStatus(HttpStatus.NOT_FOUND)
-                        .message("No order found with the provided ID.")
-                        .build()
-        );
+    public void giveFreeOrder(Order order) {
+        Order existingOrder = findById(order.getId());
 
         if (!existingOrder.isFree()) {
             throw CustomException.builder()
@@ -65,9 +51,13 @@ public class OrderService {
 
         existingOrder.setFree(false);
         orderRepository.save(existingOrder);
+    }
 
-        Card card = order.getCard();
-        card.setActive(false);
-        cardService.deleteOne(card.getId());
+    private Order findById(Long id) {
+        return orderRepository.findById(id).orElseThrow(
+                () -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.ORDER_NOT_FOUND.getText())
+                        .build());
     }
 }

@@ -9,6 +9,7 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,7 @@ public class CardService {
     }
 
     public void deleteOne(Long id) {
-        Card card = findById(id);
-        cardRepository.delete(card);
+        cardRepository.delete(findById(id));
     }
 
     public Card findById(Long id) {
@@ -52,16 +52,14 @@ public class CardService {
 
     public void useCard(Card card) {
         if(!card.isActive()) {
-            throw CustomException.builder()
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message(MessageSource.CARD_IS_NOT_ACTIVE.getText())
-                    .build();
+            throw new IllegalStateException("Card is not active and cannot be used.");
         }
 
         int currentLimit = card.getLimit();
         card.setLimit(currentLimit - 1);
 
         if (card.getLimit() == 0) {
+            deactivateCard(card);
             orderService.createFreeOrder(card);
         }
     }
