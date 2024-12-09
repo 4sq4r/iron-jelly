@@ -26,11 +26,9 @@ public class OrderService {
         return orderMapper.toDTO(savedOrder);
     }
 
-    public OrderDTO getOne(long id) {
+    public OrderDTO getOne(Long id) {
         return orderMapper.toDTO(findById(id));
     }
-
-
 
     public Order createFreeOrder(Card card) {
         Order order = new Order();
@@ -55,7 +53,7 @@ public class OrderService {
         orderRepository.save(existingOrder);
     }
 
-    private Order findById(long id) {
+    private Order findById(Long id) {
         return orderRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)

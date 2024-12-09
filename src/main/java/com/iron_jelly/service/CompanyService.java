@@ -24,16 +24,16 @@ public class CompanyService {
         return companyMapper.toDTO(company);
     }
 
-    public CompanyDTO getOne(long id) {
+    public CompanyDTO getOne(Long id) {
         return companyMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(long id) {
+    public void deleteOne(Long id) {
         Company company = findById(id);
         companyRepository.delete(company);
     }
 
-    public Company findById(long id) {
+    public Company findById(Long id) {
         return companyRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)

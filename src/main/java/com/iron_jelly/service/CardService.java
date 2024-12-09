@@ -30,16 +30,15 @@ public class CardService {
         return cardMapper.toDTO(savedCard);
     }
 
-    public CardDTO getOne(long id) {
+    public CardDTO getOne(Long id) {
         return cardMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(long id) {
-        Card card = findById(id);
-        cardRepository.delete(card);
+    public void deleteOne(Long id) {
+        cardRepository.delete(findById(id));
     }
 
-    public Card findById(long id) {
+    public Card findById(Long id) {
         return cardRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)

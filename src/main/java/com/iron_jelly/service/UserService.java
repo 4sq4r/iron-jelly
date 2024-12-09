@@ -35,16 +35,16 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public UserDTO getOne(long id) {
+    public UserDTO getOne(Long id) {
         return userMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(long id) {
+    public void deleteOne(Long id) {
         User user = findById(id);
         userRepository.delete(user);
     }
 
-    public User findById(long id) {
+    public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)

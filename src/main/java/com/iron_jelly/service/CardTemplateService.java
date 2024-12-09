@@ -31,16 +31,16 @@ public class CardTemplateService {
         return cardTemplateMapper.toDTO(savedCardTemplate);
     }
 
-    public CardTemplateDTO getOne(long id) {
+    public CardTemplateDTO getOne(Long id) {
         return cardTemplateMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(long id) {
+    public void deleteOne(Long id) {
         CardTemplate cardTemplate = findById(id);
         cardTemplateRepository.delete(cardTemplate);
     }
 
-    private CardTemplate findById(long id) {
+    private CardTemplate findById(Long id) {
         return cardTemplateRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
