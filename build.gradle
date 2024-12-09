@@ -34,6 +34,9 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.mapstruct:mapstruct:1.6.2'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
+	implementation 'org.flywaydb:flyway-core:11.0.1'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.0.1'
+
 }
 
 tasks.named('test') {
