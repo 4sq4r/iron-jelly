@@ -26,10 +26,4 @@ public class OrderController {
         log.info("Incoming request to get order with id: {}", id);
         return orderService.getOne(id);
     }
-
-    @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable long id) {
-        log.info("Incoming request to delete order with id: {}", id);
-        orderService.deleteOne(id);
-    }
 }

@@ -16,30 +16,51 @@ import java.util.UUID;
 public class CardService {
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
+    private final OrderService orderService;
+    private final UserService userService;
+    public final CompanyService companyService;
 
     public CardDTO saveOne(CardDTO cardDTO) {
+        userService.findById(cardDTO.getUserId());
+        companyService.findById(cardDTO.getCompanyId());
+
         Card card = cardMapper.toEntity(cardDTO);
         Card savedCard = cardRepository.save(card);
-        String formattedCardNumber = String.format("%08d", savedCard.getCardNumber());
-        cardDTO.setCardNumber(Integer.valueOf(formattedCardNumber));
 
         return cardMapper.toDTO(savedCard);
     }
 
-    public CardDTO getOne(UUID id) {
+    public CardDTO getOne(Long id) {
         return cardMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(UUID id) {
-        Card card = findById(id);
-        cardRepository.delete(card);
+    public void deleteOne(Long id) {
+        cardRepository.delete(findById(id));
     }
 
-    public Card findById(UUID id) {
+    public Card findById(Long id) {
         return cardRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.CARD_NOT_FOUND.getText())
                         .build());
+    }
+
+    public void deactivateCard(Card card) {
+        card.setActive(false);
+    }
+
+    public void useCard(Card card) {
+        if(!card.isActive()) {
+            throw new IllegalStateException("Card is not active and cannot be used.");
+        }
+
+        int currentLimit = card.getLimit();
+        card.setLimit(currentLimit - 1);
+
+        if (card.getLimit() == 0) {
+            deactivateCard(card);
+            orderService.createFreeOrder(card);
+        }
     }
 }

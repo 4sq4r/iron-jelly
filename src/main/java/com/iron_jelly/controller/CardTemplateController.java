@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/cardTemplates/v1")
+@RequestMapping("/card-templates/v1")
 @RequiredArgsConstructor
 public class CardTemplateController {
 

@@ -24,13 +24,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDTO getOne(@PathVariable UUID id) {
+    public UserDTO getOne(@PathVariable long id) {
         log.info("Incoming request to get user with id: {}", id);
         return userService.getOne(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable UUID id) {
+    public void deleteOne(@PathVariable long id) {
         log.info("Incoming request to delete user with id: {}", id);
         userService.deleteOne(id);
     }

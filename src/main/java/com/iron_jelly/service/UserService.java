@@ -9,7 +9,6 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -36,16 +35,16 @@ public class UserService {
         return userMapper.toDTO(user);
     }
 
-    public UserDTO getOne(UUID id) {
+    public UserDTO getOne(Long id) {
         return userMapper.toDTO(findById(id));
     }
 
-    public void deleteOne(UUID id) {
+    public void deleteOne(Long id) {
         User user = findById(id);
         userRepository.delete(user);
     }
 
-    public User findById(UUID id) {
+    public User findById(Long id) {
         return userRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
