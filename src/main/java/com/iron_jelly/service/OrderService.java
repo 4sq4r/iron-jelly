@@ -30,13 +30,7 @@ public class OrderService {
         return orderMapper.toDTO(findById(id));
     }
 
-    private Order findById(long id) {
-        return orderRepository.findById(id).orElseThrow(
-                () -> CustomException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message(MessageSource.ORDER_NOT_FOUND.getText())
-                        .build());
-    }
+
 
     public Order createFreeOrder(Card card) {
         Order order = new Order();
@@ -48,15 +42,8 @@ public class OrderService {
 
     @Transactional
     public void giveFreeOrder(Order order) {
-        // Найти заказ по ID
-        Order existingOrder = orderRepository.findById(order.getId()).orElseThrow(() ->
-                CustomException.builder()
-                        .httpStatus(HttpStatus.NOT_FOUND)
-                        .message("No order found with the provided ID.")
-                        .build()
-        );
+        Order existingOrder = findById(order.getId());
 
-        // Проверить, является ли заказ бесплатным
         if (!existingOrder.isFree()) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
@@ -64,10 +51,15 @@ public class OrderService {
                     .build();
         }
 
-        // Обновить статус заказа на не бесплатный
         existingOrder.setFree(false);
-
-        // Сохранить изменения
         orderRepository.save(existingOrder);
+    }
+
+    private Order findById(long id) {
+        return orderRepository.findById(id).orElseThrow(
+                () -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.ORDER_NOT_FOUND.getText())
+                        .build());
     }
 }
