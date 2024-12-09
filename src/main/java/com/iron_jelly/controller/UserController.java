@@ -1,5 +1,6 @@
 package com.iron_jelly.controller;
 
+import com.iron_jelly.model.dto.AuthDTO;
 import com.iron_jelly.model.dto.UserDTO;
 import com.iron_jelly.service.UserService;
 import jakarta.validation.Valid;
@@ -22,6 +23,12 @@ public class UserController {
         log.info("Incoming request to save user: {}", userDTO.getUsername());
         return userService.saveOne(userDTO);
     }
+
+    @PostMapping("/login")
+    public AuthDTO login(@RequestBody @Valid AuthDTO authDTO) {
+        return userService.login(authDTO);
+    }
+
 
     @GetMapping("/{id}")
     public UserDTO getOne(@PathVariable UUID id) {
