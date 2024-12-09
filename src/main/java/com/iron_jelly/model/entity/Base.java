@@ -11,8 +11,7 @@ import java.util.UUID;
 public class Base implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "external_id", nullable = false)
     private UUID externalId;

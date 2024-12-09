@@ -6,7 +6,8 @@ public enum MessageSource {
     CARD_ALREADY_EXISTS("Card already exist"),
     CARD_NOT_FOUND("Card not found"),
     CARD_TEMPLATE_NOT_FOUND("Card template not found"),
-    COMPANY_NOT_FOUND("Company not found"),
+    COMPANY_NOT_FOUND("Company not found, id: %s"),
+    COMPANY_NAME_TOO_LONG("Company name should be no more than 30 characters: %s"),
     ORDER_NOT_FOUND("Order not found");
 
     private String text;

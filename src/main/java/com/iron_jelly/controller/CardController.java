@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -18,7 +17,7 @@ public class CardController {
 
     @PostMapping
     public CardDTO saveOne(@RequestBody @Valid CardDTO cardDTO) {
-        log.info("Incoming request to save card: {}", cardDTO.getId());
+        log.info("Incoming request to save card.");
         return cardService.saveOne(cardDTO);
     }
 

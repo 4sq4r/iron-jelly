@@ -6,7 +6,6 @@ import com.iron_jelly.model.dto.CardTemplateDTO;
 import com.iron_jelly.model.entity.CardTemplate;
 import com.iron_jelly.model.entity.Company;
 import com.iron_jelly.repository.CardTemplateRepository;
-import com.iron_jelly.repository.CompanyRepository;
 import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,8 +21,7 @@ public class CardTemplateService {
 
     public CardTemplateDTO saveOne(CardTemplateDTO cardTemplateDTO) {
 
-        Company company = companyService.findById(cardTemplateDTO.getCompanyId());
-
+        Company company = companyService.findEntityByExternalId(cardTemplateDTO.getExternalId());
         CardTemplate cardTemplate = cardTemplateMapper.toEntity(cardTemplateDTO);
         cardTemplate.setCompany(company);
         CardTemplate savedCardTemplate = cardTemplateRepository.save(cardTemplate);
