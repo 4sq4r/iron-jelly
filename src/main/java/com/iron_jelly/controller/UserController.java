@@ -1,11 +1,14 @@
 package com.iron_jelly.controller;
 
+import com.iron_jelly.model.dto.AuthDTO;
 import com.iron_jelly.model.dto.UserDTO;
 import com.iron_jelly.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -21,14 +24,20 @@ public class UserController {
         return userService.saveOne(userDTO);
     }
 
+    @PostMapping("/login")
+    public AuthDTO login(@RequestBody @Valid AuthDTO authDTO) {
+        return userService.login(authDTO);
+    }
+
+
     @GetMapping("/{id}")
-    public UserDTO getOne(@PathVariable Long id) {
+    public UserDTO getOne(@PathVariable UUID id) {
         log.info("Incoming request to get user with id: {}", id);
         return userService.getOne(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable Long id) {
+    public void deleteOne(@PathVariable UUID id) {
         log.info("Incoming request to delete user with id: {}", id);
         userService.deleteOne(id);
     }

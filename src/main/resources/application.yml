@@ -10,6 +10,15 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    url: jdbc:postgresql://localhost:5432/postgres
+    user: iron_jelly
+    password: i2n3cx13ans2612a
+    driver-class-name: org.postgresql.Driver
+jwt:
+  issuer: iron-jelly
+  secret: nacechrn98a3912y41231
+  expirationHours: 24

@@ -9,11 +9,11 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class CardService {
+
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
     private final OrderService orderService;
@@ -21,13 +21,12 @@ public class CardService {
     public final CompanyService companyService;
 
     public CardDTO saveOne(CardDTO cardDTO) {
-        userService.findById(cardDTO.getUserId());
-        companyService.findById(cardDTO.getCompanyId());
-
+        userService.findEntityByExternalId(cardDTO.getUserId());
+        companyService.findEntityByExternalId(cardDTO.getExternalId());
         Card card = cardMapper.toEntity(cardDTO);
-        Card savedCard = cardRepository.save(card);
+        cardRepository.save(card);
 
-        return cardMapper.toDTO(savedCard);
+        return cardMapper.toDTO(card);
     }
 
     public CardDTO getOne(Long id) {
@@ -51,14 +50,14 @@ public class CardService {
     }
 
     public void useCard(Card card) {
-        if(!card.isActive()) {
+        if (!card.isActive()) {
             throw new IllegalStateException("Card is not active and cannot be used.");
         }
 
-        int currentLimit = card.getLimit();
-        card.setLimit(currentLimit - 1);
+        int currentLimit = card.getUsageLimit();
+        card.setUsageLimit(currentLimit - 1);
 
-        if (card.getLimit() == 0) {
+        if (card.getUsageLimit() == 0) {
             deactivateCard(card);
             orderService.createFreeOrder(card);
         }

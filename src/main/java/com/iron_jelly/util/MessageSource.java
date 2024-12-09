@@ -3,12 +3,13 @@ package com.iron_jelly.util;
 public enum MessageSource {
     USERNAME_ALREADY_EXISTS("Username already exists."),
     USER_NOT_FOUND("User not found."),
+    USERNAME_CANNOT_BE_EMPTY("Username cannot be empty."),
     CARD_ALREADY_EXISTS("Card already exist"),
     CARD_NOT_FOUND("Card not found"),
     CARD_TEMPLATE_NOT_FOUND("Card template not found"),
-    COMPANY_NOT_FOUND("Company not found"),
-    ORDER_NOT_FOUND("Order not found"),
-    CARD_IS_NOT_ACTIVE("Карта не активна");
+    COMPANY_NOT_FOUND("Company not found, id: %s"),
+    COMPANY_NAME_TOO_LONG("Company name should be no more than 30 characters: %s"),
+    ORDER_NOT_FOUND("Order not found");
 
     private String text;
 
