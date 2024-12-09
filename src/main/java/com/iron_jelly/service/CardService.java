@@ -21,13 +21,12 @@ public class CardService {
     public final CompanyService companyService;
 
     public CardDTO saveOne(CardDTO cardDTO) {
-        userService.findById(cardDTO.getUserId());
+        userService.findEntityByExternalId(cardDTO.getUserId());
         companyService.findEntityByExternalId(cardDTO.getExternalId());
-
         Card card = cardMapper.toEntity(cardDTO);
-        Card savedCard = cardRepository.save(card);
+        cardRepository.save(card);
 
-        return cardMapper.toDTO(savedCard);
+        return cardMapper.toDTO(card);
     }
 
     public CardDTO getOne(Long id) {

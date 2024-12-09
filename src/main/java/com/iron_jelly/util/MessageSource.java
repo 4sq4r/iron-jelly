@@ -3,6 +3,7 @@ package com.iron_jelly.util;
 public enum MessageSource {
     USERNAME_ALREADY_EXISTS("Username already exists."),
     USER_NOT_FOUND("User not found."),
+    USERNAME_CANNOT_BE_EMPTY("Username cannot be empty."),
     CARD_ALREADY_EXISTS("Card already exist"),
     CARD_NOT_FOUND("Card not found"),
     CARD_TEMPLATE_NOT_FOUND("Card template not found"),
