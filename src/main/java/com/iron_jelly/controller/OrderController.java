@@ -17,7 +17,7 @@ public class OrderController {
 
     @PostMapping
     public OrderDTO saveOne(@RequestBody @Valid OrderDTO orderDTO) {
-        log.info("Incoming request to save order: {}", orderDTO.getId());
+        log.info("Incoming request to save order.");
         return orderService.saveOne(orderDTO);
     }
 

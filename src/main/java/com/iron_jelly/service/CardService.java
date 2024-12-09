@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CardService {
+
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
     private final OrderService orderService;
@@ -21,7 +22,7 @@ public class CardService {
 
     public CardDTO saveOne(CardDTO cardDTO) {
         userService.findById(cardDTO.getUserId());
-        companyService.findById(cardDTO.getCompanyId());
+        companyService.findEntityByExternalId(cardDTO.getExternalId());
 
         Card card = cardMapper.toEntity(cardDTO);
         Card savedCard = cardRepository.save(card);
