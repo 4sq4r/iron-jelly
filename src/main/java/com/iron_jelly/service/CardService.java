@@ -9,7 +9,6 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -51,14 +50,14 @@ public class CardService {
     }
 
     public void useCard(Card card) {
-        if(!card.isActive()) {
+        if (!card.isActive()) {
             throw new IllegalStateException("Card is not active and cannot be used.");
         }
 
-        int currentLimit = card.getLimit();
-        card.setLimit(currentLimit - 1);
+        int currentLimit = card.getUsageLimit();
+        card.setUsageLimit(currentLimit - 1);
 
-        if (card.getLimit() == 0) {
+        if (card.getUsageLimit() == 0) {
             deactivateCard(card);
             orderService.createFreeOrder(card);
         }
