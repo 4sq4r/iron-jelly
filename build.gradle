@@ -37,6 +37,7 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core:11.0.1'
 	runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.0.1'
 	implementation 'org.springframework.boot:spring-boot-starter-security:3.4.0'
+	implementation 'com.auth0:java-jwt:4.4.0'
 }
 
 tasks.named('test') {
