@@ -39,7 +39,7 @@ public class CompanyService {
         company.setCreatedBy(username);
         company.setUpdatedBy(username);
         User user = userService.assignAdminRole(username);
-        company.setUsers(Collections.singleton(user));
+        company.getUsers().add(user);
         companyRepository.save(company);
 
         return companyMapper.toDTO(company);
