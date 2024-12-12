@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.UUID;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class UserDTO extends BaseDTO {
@@ -18,4 +20,7 @@ public class UserDTO extends BaseDTO {
     private String firstName;
     @NotNull
     private String lastName;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private UUID companyId;
 }
