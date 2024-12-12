@@ -4,7 +4,10 @@ import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.CompanyMapper;
 import com.iron_jelly.model.dto.CompanyDTO;
 import com.iron_jelly.model.entity.Company;
+import com.iron_jelly.model.entity.User;
+import com.iron_jelly.model.enums.UserRole;
 import com.iron_jelly.repository.CompanyRepository;
+import com.iron_jelly.security.JwtService;
 import com.iron_jelly.util.MessageSource;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -21,13 +26,20 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final CompanyMapper companyMapper;
+    private final JwtService jwtService;
+    private final UserService userService;
 
     @Transactional(rollbackFor = Exception.class)
     public CompanyDTO saveOne(CompanyDTO companyDTO) {
+        String username = jwtService.getUsername();
         String name = companyDTO.getName().trim();
         validateName(name);
         companyDTO.setName(name);
         Company company = companyMapper.toEntity(companyDTO);
+        company.setCreatedBy(username);
+        company.setUpdatedBy(username);
+        User user = userService.assignAdminRole(username);
+        company.setUsers(Collections.singleton(user));
         companyRepository.save(company);
 
         return companyMapper.toDTO(company);

@@ -1,9 +1,9 @@
 package com.iron_jelly.model.entity;
 
+import com.iron_jelly.model.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -19,4 +19,7 @@ public class User extends Base {
     private String firstName;
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
 }

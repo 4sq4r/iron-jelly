@@ -31,8 +31,8 @@ public class SecurityConfiguration {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers(new MvcRequestMatcher(introspector, "/users/v1/**"))
-                        .permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers(
+                                new MvcRequestMatcher(introspector, "/users/v1/**")).permitAll()
                         .anyRequest()
                         .fullyAuthenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
