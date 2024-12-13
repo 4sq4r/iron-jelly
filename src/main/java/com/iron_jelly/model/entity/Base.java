@@ -20,9 +20,9 @@ public class Base implements Serializable {
     private LocalDateTime createdAt;
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-    @Column(name = "created_by")
+    @Column(name = "created_by", nullable = false)
     private String createdBy;
-    @Column(name = "updated_by")
+    @Column(name = "updated_by", nullable = false)
     private String updatedBy;
 
     @PrePersist
