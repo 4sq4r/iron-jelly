@@ -1,10 +1,11 @@
 package com.iron_jelly.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -14,4 +15,9 @@ public class Company extends Base {
 
     @Column(name = "name", nullable = false, length = 30)
     private String name;
+    @ManyToMany
+    @JoinTable(name = "companies_2_users",
+            joinColumns = @JoinColumn(name = "company_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "user_id", nullable = false))
+    private Set<User> users = new HashSet<>();
 }

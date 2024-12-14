@@ -6,9 +6,10 @@ import com.iron_jelly.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -19,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public UserDTO saveOne(@RequestBody @Valid UserDTO userDTO) {
+    public UserDTO register(@RequestBody @Valid UserDTO userDTO) {
         log.info("Incoming request to save user: {}", userDTO.getUsername());
         return userService.saveOne(userDTO);
     }
@@ -27,18 +28,5 @@ public class UserController {
     @PostMapping("/login")
     public AuthDTO login(@RequestBody @Valid AuthDTO authDTO) {
         return userService.login(authDTO);
-    }
-
-
-    @GetMapping("/{id}")
-    public UserDTO getOne(@PathVariable UUID id) {
-        log.info("Incoming request to get user with id: {}", id);
-        return userService.getOne(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable UUID id) {
-        log.info("Incoming request to delete user with id: {}", id);
-        userService.deleteOne(id);
     }
 }

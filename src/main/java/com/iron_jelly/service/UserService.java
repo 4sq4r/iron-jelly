@@ -5,6 +5,7 @@ import com.iron_jelly.mapper.UserMapper;
 import com.iron_jelly.model.dto.AuthDTO;
 import com.iron_jelly.model.dto.UserDTO;
 import com.iron_jelly.model.entity.User;
+import com.iron_jelly.model.enums.UserRole;
 import com.iron_jelly.repository.UserRepository;
 import com.iron_jelly.security.JwtService;
 import com.iron_jelly.util.MessageSource;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -33,12 +35,20 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public UserDTO saveOne(UserDTO userDTO) {
-        userDTO.setUsername(userDTO.getUsername().trim());
-        userDTO.setFirstName(userDTO.getFirstName().trim());
-        userDTO.setLastName(userDTO.getLastName().trim());
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword().trim()));
+        boolean isEmployee = userDTO.getCompanyId() != null;
+
+        if (isEmployee) {
+            checkAdminRole(jwtService.getRole());
+        }
+
+        String username = jwtService.getUsername();
+        formatDTO(userDTO);
         checkUsernameUniqueness(userDTO.getUsername());
         User user = userMapper.toEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(isEmployee ? UserRole.EMPLOYEE : UserRole.GUEST);
+        user.setCreatedBy(username);
+        user.setUpdatedBy(username);
         userRepository.save(user);
 
         return userMapper.toDTO(user);
@@ -54,13 +64,15 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void deleteOne(UUID id) {
-        User user = findEntityByExternalId(id);
-        userRepository.delete(user);
-    }
+    public User assignAdminRole(String username) {
+        User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(
+                () -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.USER_NOT_FOUND.getText())
+                        .build());
+        user.setRole(UserRole.ADMIN);
 
-    public UserDTO getOne(UUID id) {
-        return userMapper.toDTO(findEntityByExternalId(id));
+        return userRepository.save(user);
     }
 
     public User findEntityByExternalId(UUID id) {
@@ -71,11 +83,27 @@ public class UserService {
                         .build());
     }
 
-    private void checkUsernameUniqueness(String username) {
+    public void checkUsernameUniqueness(String username) {
         if (userRepository.existsByUsernameIgnoreCase(username)) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.USERNAME_ALREADY_EXISTS.getText())
+                    .build();
+        }
+    }
+
+    public void formatDTO(UserDTO userDTO) {
+        userDTO.setUsername(userDTO.getUsername().trim());
+        userDTO.setPassword(userDTO.getPassword().trim());
+        userDTO.setFirstName(userDTO.getFirstName().trim());
+        userDTO.setLastName(userDTO.getLastName().trim());
+    }
+
+    private void checkAdminRole(String role) {
+        if (!Objects.equals(role, UserRole.ADMIN.name())) {
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.ACCESS_DENIED.getText())
                     .build();
         }
     }
