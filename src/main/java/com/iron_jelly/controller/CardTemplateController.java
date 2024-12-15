@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/card-templates/v1")
@@ -17,19 +19,19 @@ public class CardTemplateController {
 
     @PostMapping
     public CardTemplateDTO saveOne(@RequestBody @Valid CardTemplateDTO cardTemplateDTO) {
-        log.info("Incoming request to save card template: {}", cardTemplateDTO.getName());
+        log.info("Incoming request to save card template: {}", cardTemplateDTO.getTitle());
         return cardTemplateService.saveOne(cardTemplateDTO);
     }
 
-    @GetMapping("/{id}")
-    public CardTemplateDTO getOne(@PathVariable long id) {
-        log.info("Incoming request to get card template with id: {}", id);
-        return cardTemplateService.getOne(id);
+    @GetMapping("/{externalId}")
+    public CardTemplateDTO getOne(@PathVariable UUID externalId) {
+        log.info("Incoming request to get card template with externalId: {}", externalId);
+        return cardTemplateService.getOne(externalId);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable long id) {
-        log.info("Incoming request to delete user with id: {}", id);
-        cardTemplateService.deleteOne(id);
+    @DeleteMapping("/{externalId}")
+    public void deleteOne(@PathVariable UUID externalId) {
+        log.info("Incoming request to delete user with id: {}", externalId);
+        cardTemplateService.deleteOne(externalId);
     }
 }

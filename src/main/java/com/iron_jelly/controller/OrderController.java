@@ -20,10 +20,4 @@ public class OrderController {
         log.info("Incoming request to save order.");
         return orderService.saveOne(orderDTO);
     }
-
-    @GetMapping("/{id}")
-    public OrderDTO getOne(@PathVariable long id) {
-        log.info("Incoming request to get order with id: {}", id);
-        return orderService.getOne(id);
-    }
 }

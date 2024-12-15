@@ -1,7 +1,6 @@
 package com.iron_jelly.model.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,9 +13,10 @@ public class CardTemplate extends Base {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
-    @Min(value = 1)
-    @Column(name = "usage_limit", nullable = false)
-    private Integer usageLimit;
+    @Column(name = "title", length = 50)
+    private String title;
+    @Column(name = "limit_value")
+    private Integer limitValue;
     @Column(name = "expire_days")
     private Integer expireDays;
     @Column(name = "description", length = 500)

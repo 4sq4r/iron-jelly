@@ -10,9 +10,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class Order extends Base {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "card_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "card_id")
     private Card card;
     @Column(name = "is_free", nullable = false)
-    boolean isFree = false;
+    boolean isFree;
 }

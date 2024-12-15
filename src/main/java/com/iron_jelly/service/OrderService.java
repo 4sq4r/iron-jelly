@@ -5,7 +5,9 @@ import com.iron_jelly.mapper.OrderMapper;
 import com.iron_jelly.model.dto.OrderDTO;
 import com.iron_jelly.model.entity.Card;
 import com.iron_jelly.model.entity.Order;
+import com.iron_jelly.repository.CardRepository;
 import com.iron_jelly.repository.OrderRepository;
+import com.iron_jelly.security.JwtService;
 import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,25 +20,34 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final CardService cardService;
+    private final JwtService jwtService;
+    private final CardRepository cardRepository;
+
 
     public OrderDTO saveOne(OrderDTO orderDTO) {
+        String username = jwtService.getUsername();
+
         Order order = orderMapper.toEntity(orderDTO);
-        Order savedOrder = orderRepository.save(order);
-
-        return orderMapper.toDTO(savedOrder);
-    }
-
-    public OrderDTO getOne(Long id) {
-        return orderMapper.toDTO(findById(id));
-    }
-
-    public Order createFreeOrder(Card card) {
-        Order order = new Order();
+        Card card = cardService.findByExternalId(orderDTO.getCardId());
         order.setCard(card);
-        order.setFree(true);
+        order.setFree(false);
+        order.setCreatedBy(username);
+        order.setUpdatedBy(username);
+        orderRepository.save(order);
+        cardService.addOrderToCard(card, order);
+        cardRepository.save(card);
 
-        return orderRepository.save(order);
+        return orderMapper.toDTO(order);
     }
+
+//    public Order createFreeOrder(Card card) {
+//        Order order = new Order();
+//        order.setCard(card);
+//        order.setFree(true);
+//
+//        return orderRepository.save(order);
+//    }
 
     @Transactional
     public void giveFreeOrder(Order order) {

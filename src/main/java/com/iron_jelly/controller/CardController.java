@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequestMapping("/cards/v1")
@@ -22,13 +24,13 @@ public class CardController {
     }
 
     @GetMapping("/{id}")
-    public CardDTO getOne(@PathVariable long id) {
+    public CardDTO getOne(@PathVariable UUID id) {
         log.info("Incoming request to get card with id: {}", id);
         return cardService.getOne(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteOne(@PathVariable long id) {
+    public void deleteOne(@PathVariable UUID id) {
         log.info("Incoming request to delete card with id: {}", id);
         cardService.deleteOne(id);
     }

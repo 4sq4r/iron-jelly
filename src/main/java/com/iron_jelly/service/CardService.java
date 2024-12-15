@@ -4,11 +4,16 @@ import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.CardMapper;
 import com.iron_jelly.model.dto.CardDTO;
 import com.iron_jelly.model.entity.Card;
+import com.iron_jelly.model.entity.CardTemplate;
+import com.iron_jelly.model.entity.Order;
+import com.iron_jelly.model.entity.User;
 import com.iron_jelly.repository.CardRepository;
+import com.iron_jelly.security.JwtService;
 import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -16,29 +21,39 @@ public class CardService {
 
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
-    private final OrderService orderService;
     private final UserService userService;
-    public final CompanyService companyService;
+    private final CardTemplateService cardTemplateService;
+    private final JwtService jwtService;
+
 
     public CardDTO saveOne(CardDTO cardDTO) {
-        userService.findEntityByExternalId(cardDTO.getUserId());
-        companyService.findEntityByExternalId(cardDTO.getExternalId());
+        String username = jwtService.getUsername();
+
         Card card = cardMapper.toEntity(cardDTO);
+        User user = userService.findEntityByExternalId(cardDTO.getUserId());
+        card.setUser(user);
+        CardTemplate cardTemplate = cardTemplateService.findByExternalId(cardDTO.getCardTemplateId());
+        card.setCardTemplate(cardTemplate);
+        card.setActive(true);
+        card.setCountOrders(0);
+        card.setCreatedBy(username);
+        card.setUpdatedBy(username);
         cardRepository.save(card);
 
         return cardMapper.toDTO(card);
     }
 
-    public CardDTO getOne(Long id) {
-        return cardMapper.toDTO(findById(id));
+
+    public CardDTO getOne(UUID id) {
+        return cardMapper.toDTO(findByExternalId(id));
     }
 
-    public void deleteOne(Long id) {
-        cardRepository.delete(findById(id));
+    public void deleteOne(UUID id) {
+        cardRepository.delete(findByExternalId(id));
     }
 
-    public Card findById(Long id) {
-        return cardRepository.findById(id).orElseThrow(
+    public Card findByExternalId(UUID id) {
+        return cardRepository.findByExternalId(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.CARD_NOT_FOUND.getText())
@@ -49,17 +64,20 @@ public class CardService {
         card.setActive(false);
     }
 
-    public void useCard(Card card) {
-        if (!card.isActive()) {
-            throw new IllegalStateException("Card is not active and cannot be used.");
+    public void addOrderToCard(Card card, Order order) {
+        Set<Order> orders = card.getOrders();
+        if (orders == null) {
+            orders = new HashSet<>();
+            card.setOrders(orders);
         }
+        orders.add(order);
+        countOneOrder(card);
+    }
 
-        int currentLimit = card.getUsageLimit();
-        card.setUsageLimit(currentLimit - 1);
-
-        if (card.getUsageLimit() == 0) {
-            deactivateCard(card);
-            orderService.createFreeOrder(card);
-        }
+    public void countOneOrder(Card card) {
+        int currentOrders = card.getCountOrders();
+        card.setCountOrders(currentOrders + 1);
     }
 }
+
+
