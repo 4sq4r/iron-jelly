@@ -14,5 +14,5 @@ public class Order extends Base {
     @JoinColumn(name = "card_id")
     private Card card;
     @Column(name = "is_free", nullable = false)
-    boolean isFree;
+    private Boolean isFree;
 }

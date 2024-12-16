@@ -62,7 +62,7 @@ public class CardService {
                         .build());
     }
 
-    public Card findById(long id){
+    public Card findById(Long id){
         return cardRepository.findById(id).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
@@ -91,7 +91,7 @@ public class CardService {
         card.setExpireDate(expireDay);
     }
 
-    public void extendExpirationDate(int days, long id) {
+    public void extendExpirationDate(int days, Long id) {
         Card card = findById(id);
         LocalDate newExpireDay = card.getExpireDate().plusDays(days);
         card.setExpireDate(newExpireDay);

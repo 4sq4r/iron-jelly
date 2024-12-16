@@ -1,11 +1,12 @@
 package com.iron_jelly.controller;
 
-import com.iron_jelly.model.dto.OrderDTO;
 import com.iron_jelly.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -16,8 +17,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public OrderDTO saveOne(@RequestBody @Valid OrderDTO orderDTO) {
+    public void saveOne(@RequestBody @Valid UUID externalId) {
         log.info("Incoming request to save order.");
-        return orderService.saveOne(orderDTO);
+        orderService.saveOne(externalId);
     }
 }

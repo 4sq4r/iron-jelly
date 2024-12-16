@@ -17,7 +17,7 @@ public class Card extends Base {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @Column(name = "is_active", nullable = false)
-    private boolean active;
+    private Boolean active;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "card_template_id", nullable = false)
     private CardTemplate cardTemplate;

@@ -1,46 +1,40 @@
 package com.iron_jelly.service;
 
-import com.iron_jelly.exception.CustomException;
-import com.iron_jelly.mapper.OrderMapper;
-import com.iron_jelly.model.dto.OrderDTO;
-import com.iron_jelly.model.entity.Card;
-import com.iron_jelly.model.entity.Order;
-import com.iron_jelly.repository.CardRepository;
-import com.iron_jelly.repository.OrderRepository;
-import com.iron_jelly.security.JwtService;
-import com.iron_jelly.util.MessageSource;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import com.iron_jelly.model.entity.Card;
+import com.iron_jelly.model.entity.Order;
+import com.iron_jelly.util.MessageSource;
+import com.iron_jelly.security.JwtService;
+import com.iron_jelly.exception.CustomException;
+import com.iron_jelly.repository.OrderRepository;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderMapper orderMapper;
     private final CardService cardService;
     private final JwtService jwtService;
-    private final CardRepository cardRepository;
 
-
-    public OrderDTO saveOne(OrderDTO orderDTO) {
-        Order order = orderMapper.toEntity(orderDTO);
-        Card card = cardService.findByExternalId(orderDTO.getCardId());
-        if(card.isActive()) {
-            order.setCard(card);
-            order.setFree(setOrderFieldIsActiveFalseOrFree(order, card));
-            String username = jwtService.getUsername();
-            order.setCreatedBy(username);
-            order.setUpdatedBy(username);
-            orderRepository.save(order);
-            cardService.addOrderToCard(card, order);
-
-            return orderMapper.toDTO(order);
-        } else throw CustomException.builder()
-                .httpStatus(HttpStatus.BAD_REQUEST)
-                .message(MessageSource.CARD_NOT_ACTIVE.getText())
-                .build();
+    public void saveOne(UUID externalId) {
+        Card card = cardService.findByExternalId(externalId);
+        if(!card.getActive()) {
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.CARD_NOT_ACTIVE.getText())
+                    .build();
+        }
+        Order order = new Order();
+        order.setCard(card);
+        order.setIsFree(setOrderFieldIsActiveFalseOrFree(order, card));
+        String username = jwtService.getUsername();
+        order.setCreatedBy(username);
+        order.setUpdatedBy(username);
+        orderRepository.save(order);
+        cardService.addOrderToCard(card, order);
     }
 
     public boolean setOrderFieldIsActiveFalseOrFree(Order order, Card card) {

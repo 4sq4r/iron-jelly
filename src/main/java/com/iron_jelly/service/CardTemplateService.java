@@ -46,7 +46,6 @@ public class CardTemplateService {
     public void deleteOne(UUID externalId) {
         CardTemplate cardTemplate = findByExternalId(externalId);
         cardTemplateRepository.delete(cardTemplate);
-        System.out.println("Шаблон успешно удален");
     }
 
     public CardTemplate findByExternalId(UUID externalId) {
