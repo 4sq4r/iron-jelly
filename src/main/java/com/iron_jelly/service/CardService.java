@@ -13,6 +13,7 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -36,6 +37,7 @@ public class CardService {
         card.setCardTemplate(cardTemplate);
         card.setActive(true);
         card.setCountOrders(0);
+        setExpirationDate(card);
         card.setCreatedBy(username);
         card.setUpdatedBy(username);
         cardRepository.save(card);
@@ -60,6 +62,14 @@ public class CardService {
                         .build());
     }
 
+    public Card findById(long id){
+        return cardRepository.findById(id).orElseThrow(
+                () -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.CARD_NOT_FOUND.getText())
+                        .build());
+    }
+
     public void deactivateCard(Card card) {
         card.setActive(false);
     }
@@ -71,12 +81,21 @@ public class CardService {
             card.setOrders(orders);
         }
         orders.add(order);
-        countOneOrder(card);
+        card.setCountOrders(card.getCountOrders() + 1);
+        cardRepository.save(card);
     }
 
-    public void countOneOrder(Card card) {
-        int currentOrders = card.getCountOrders();
-        card.setCountOrders(currentOrders + 1);
+    public void setExpirationDate(Card card) {
+        LocalDate today = LocalDate.now();
+        LocalDate expireDay = today.plusDays(card.getCardTemplate().getExpireDays());
+        card.setExpireDate(expireDay);
+    }
+
+    public void extendExpirationDate(int days, long id) {
+        Card card = findById(id);
+        LocalDate newExpireDay = card.getExpireDate().plusDays(days);
+        card.setExpireDate(newExpireDay);
+        cardRepository.save(card);
     }
 }
 

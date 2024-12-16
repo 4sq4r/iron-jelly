@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Data
@@ -15,8 +16,8 @@ public class Card extends Base {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @Column(name = "isActive", nullable = false)
-    boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private boolean active;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "card_template_id", nullable = false)
     private CardTemplate cardTemplate;
@@ -26,4 +27,6 @@ public class Card extends Base {
     private Set<Order> orders;
     @Column(name = "count_orders")
     private Integer countOrders;
+    @Column(name = "expire_date")
+    private LocalDate expireDate;
 }

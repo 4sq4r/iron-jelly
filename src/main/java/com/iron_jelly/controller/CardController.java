@@ -3,8 +3,11 @@ package com.iron_jelly.controller;
 import com.iron_jelly.model.dto.CardDTO;
 import com.iron_jelly.service.CardService;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -33,5 +36,18 @@ public class CardController {
     public void deleteOne(@PathVariable UUID id) {
         log.info("Incoming request to delete card with id: {}", id);
         cardService.deleteOne(id);
+    }
+
+    @PostMapping("/extend-expiration")
+    public ResponseEntity<Void> extendExpirationDate(@RequestBody ExtendExpirationRequest request) {
+        cardService.extendExpirationDate(request.getDays(), request.getId());
+        return ResponseEntity.noContent().build(); // Возвращает статус 204 No Content
+    }
+
+    @Getter
+    @Setter
+    public static class ExtendExpirationRequest {
+        private int days;
+        private long id;
     }
 }

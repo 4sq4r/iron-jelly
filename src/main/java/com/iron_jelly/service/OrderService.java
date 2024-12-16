@@ -12,7 +12,6 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -26,49 +25,31 @@ public class OrderService {
 
 
     public OrderDTO saveOne(OrderDTO orderDTO) {
-        String username = jwtService.getUsername();
-
         Order order = orderMapper.toEntity(orderDTO);
         Card card = cardService.findByExternalId(orderDTO.getCardId());
-        order.setCard(card);
-        order.setFree(false);
-        order.setCreatedBy(username);
-        order.setUpdatedBy(username);
-        orderRepository.save(order);
-        cardService.addOrderToCard(card, order);
-        cardRepository.save(card);
+        if(card.isActive()) {
+            order.setCard(card);
+            order.setFree(setOrderFieldIsActiveFalseOrFree(order, card));
+            String username = jwtService.getUsername();
+            order.setCreatedBy(username);
+            order.setUpdatedBy(username);
+            orderRepository.save(order);
+            cardService.addOrderToCard(card, order);
 
-        return orderMapper.toDTO(order);
+            return orderMapper.toDTO(order);
+        } else throw CustomException.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(MessageSource.CARD_NOT_ACTIVE.getText())
+                .build();
     }
 
-//    public Order createFreeOrder(Card card) {
-//        Order order = new Order();
-//        order.setCard(card);
-//        order.setFree(true);
-//
-//        return orderRepository.save(order);
-//    }
-
-    @Transactional
-    public void giveFreeOrder(Order order) {
-        Order existingOrder = findById(order.getId());
-
-        if (!existingOrder.isFree()) {
-            throw CustomException.builder()
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message("This order is not marked as free.")
-                    .build();
+    public boolean setOrderFieldIsActiveFalseOrFree(Order order, Card card) {
+        int countOrdersInCard = order.getCard().getCountOrders();
+        int limitValueInCardTemplate = order.getCard().getCardTemplate().getLimitValue();
+        if (countOrdersInCard == limitValueInCardTemplate) {
+            cardService.deactivateCard(card);
+            return true;
         }
-
-        existingOrder.setFree(false);
-        orderRepository.save(existingOrder);
-    }
-
-    private Order findById(Long id) {
-        return orderRepository.findById(id).orElseThrow(
-                () -> CustomException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message(MessageSource.ORDER_NOT_FOUND.getText())
-                        .build());
+        return false;
     }
 }

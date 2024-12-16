@@ -10,7 +10,8 @@ public enum MessageSource {
     COMPANY_NOT_FOUND("Company not found, id: %s"),
     COMPANY_NAME_TOO_LONG("Company name should be no more than 30 characters: %s"),
     ORDER_NOT_FOUND("Order not found"),
-    ACCESS_DENIED("Access denied. Only for admins.");
+    ACCESS_DENIED("Access denied. Only for admins."),
+    CARD_NOT_ACTIVE("Карта неактивна, чтобы сделать заказ воспользуйтесь другой картой");
 
     private String text;
 
