@@ -26,7 +26,6 @@ public class CardService {
     private final CardTemplateService cardTemplateService;
     private final JwtService jwtService;
 
-
     public CardDTO saveOne(CardDTO cardDTO) {
         String username = jwtService.getUsername();
 
@@ -36,7 +35,6 @@ public class CardService {
         CardTemplate cardTemplate = cardTemplateService.findByExternalId(cardDTO.getCardTemplateId());
         card.setCardTemplate(cardTemplate);
         card.setActive(true);
-        card.setCountOrders(0);
         setExpirationDate(card);
         card.setCreatedBy(username);
         card.setUpdatedBy(username);
@@ -44,7 +42,6 @@ public class CardService {
 
         return cardMapper.toDTO(card);
     }
-
 
     public CardDTO getOne(UUID id) {
         return cardMapper.toDTO(findByExternalId(id));
@@ -76,12 +73,7 @@ public class CardService {
 
     public void addOrderToCard(Card card, Order order) {
         Set<Order> orders = card.getOrders();
-        if (orders == null) {
-            orders = new HashSet<>();
-            card.setOrders(orders);
-        }
         orders.add(order);
-        card.setCountOrders(card.getCountOrders() + 1);
         cardRepository.save(card);
     }
 

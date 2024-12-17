@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -24,9 +25,7 @@ public class Card extends Base {
     @OneToMany(mappedBy = "card")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private Set<Order> orders;
-    @Column(name = "count_orders")
-    private Integer countOrders;
+    private Set<Order> orders = new HashSet<>();
     @Column(name = "expire_date")
     private LocalDate expireDate;
 }

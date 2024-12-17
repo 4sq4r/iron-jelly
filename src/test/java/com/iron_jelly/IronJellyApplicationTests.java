@@ -10,14 +10,9 @@ import java.util.UUID;
 
 @SpringBootTest
 class IronJellyApplicationTests {
-//	@Autowired
-//	private CardService cardService;
 
 	@Test
 	void contextLoads() {
 	}
 
-
-//	Card card = cardService.findByExternalId(UUID.fromString("c1e286aa-06d9-419f-ab1e-312e5c71eab0"));
-//	card.set
 }

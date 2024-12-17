@@ -20,13 +20,11 @@ public class CardDTO extends BaseDTO {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UUID cardTemplateId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    boolean isActive;
+    private Boolean active;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UserDTO user;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private CardTemplateDTO cardTemplate;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Integer countOrders;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private HashSet<Order> orders;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)

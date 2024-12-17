@@ -21,12 +21,14 @@ public class OrderService {
 
     public void saveOne(UUID externalId) {
         Card card = cardService.findByExternalId(externalId);
+
         if(!card.getActive()) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.CARD_NOT_ACTIVE.getText())
                     .build();
         }
+
         Order order = new Order();
         order.setCard(card);
         order.setIsFree(setOrderFieldIsActiveFalseOrFree(order, card));
@@ -38,12 +40,14 @@ public class OrderService {
     }
 
     public boolean setOrderFieldIsActiveFalseOrFree(Order order, Card card) {
-        int countOrdersInCard = order.getCard().getCountOrders();
+        int countOrdersInCard = card.getOrders().size();
         int limitValueInCardTemplate = order.getCard().getCardTemplate().getLimitValue();
+
         if (countOrdersInCard == limitValueInCardTemplate) {
             cardService.deactivateCard(card);
             return true;
         }
+
         return false;
     }
 }

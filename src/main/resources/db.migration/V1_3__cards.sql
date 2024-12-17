@@ -4,7 +4,6 @@ create table if not exists cards
     user_id          bigint      not null references users (id),
     is_active        boolean     not null default true,
     expire_date      timestamp,
-    count_orders     integer     not null default 0,
     card_template_id bigint      not null references card_templates (id),
     external_id      uuid        not null,
     created_at       timestamp   not null,
