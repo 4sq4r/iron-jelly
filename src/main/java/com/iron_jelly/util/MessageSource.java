@@ -11,7 +11,8 @@ public enum MessageSource {
     COMPANY_NAME_TOO_LONG("Company name should be no more than 30 characters: %s"),
     ORDER_NOT_FOUND("Order not found"),
     ACCESS_DENIED("Access denied. Only for admins."),
-    CARD_NOT_ACTIVE("Карта неактивна, чтобы сделать заказ воспользуйтесь другой картой");
+    CARD_NOT_ACTIVE("Карта неактивна, чтобы сделать заказ воспользуйтесь другой картой"),
+    CARD_TEMPLATE_NOT_ACTIVE("Данный шаблон карты лояльности больше не активен");
 
     private String text;
 

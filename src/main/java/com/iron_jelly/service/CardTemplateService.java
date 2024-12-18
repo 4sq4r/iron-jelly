@@ -33,6 +33,7 @@ public class CardTemplateService {
         cardTemplate.setCompany(company);
         cardTemplate.setCreatedBy(username);
         cardTemplate.setUpdatedBy(username);
+        cardTemplate.setActive(true);
         cardTemplateRepository.save(cardTemplate);
         cardTemplateDTO = cardTemplateMapper.toDTO(cardTemplate);
 
@@ -54,5 +55,16 @@ public class CardTemplateService {
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.CARD_TEMPLATE_NOT_FOUND.getText())
                         .build());
+    }
+
+    public void deactivateCardTemplate(UUID externalId) {
+        CardTemplate cardTemplate = cardTemplateRepository
+                .findByExternalId(externalId).orElseThrow(
+                        () -> CustomException.builder()
+                                .httpStatus(HttpStatus.BAD_REQUEST)
+                                .message(MessageSource.CARD_TEMPLATE_NOT_FOUND.getText())
+                                .build());
+        cardTemplate.setActive(false);
+        cardTemplateRepository.save(cardTemplate);
     }
 }

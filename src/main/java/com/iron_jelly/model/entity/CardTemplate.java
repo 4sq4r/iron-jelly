@@ -21,4 +21,6 @@ public class CardTemplate extends Base {
     private Integer expireDays;
     @Column(name = "description", length = 500)
     private String description;
+    @Column(name = "is_active")
+    private Boolean active;
 }

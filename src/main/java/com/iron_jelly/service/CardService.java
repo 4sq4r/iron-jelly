@@ -25,14 +25,22 @@ public class CardService {
     private final UserService userService;
     private final CardTemplateService cardTemplateService;
     private final JwtService jwtService;
+    private final org.springframework.context.MessageSource messageSource;
 
     public CardDTO saveOne(CardDTO cardDTO) {
-        String username = jwtService.getUsername();
+        CardTemplate cardTemplate = cardTemplateService.findByExternalId(cardDTO.getCardTemplateId());
 
+        if(!cardTemplate.getActive()) {
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.CARD_TEMPLATE_NOT_ACTIVE.getText())
+                    .build();
+        }
+
+        String username = jwtService.getUsername();
         Card card = cardMapper.toEntity(cardDTO);
         User user = userService.findEntityByExternalId(cardDTO.getUserId());
         card.setUser(user);
-        CardTemplate cardTemplate = cardTemplateService.findByExternalId(cardDTO.getCardTemplateId());
         card.setCardTemplate(cardTemplate);
         card.setActive(true);
         setExpirationDate(card);

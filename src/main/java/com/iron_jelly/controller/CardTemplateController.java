@@ -33,4 +33,9 @@ public class CardTemplateController {
         log.info("Incoming request to delete user with id: {}", externalId);
         cardTemplateService.deleteOne(externalId);
     }
+
+    @PutMapping("/{externalId}/deactivate")
+    public void deactivateCardTemplate(@PathVariable UUID externalId) {
+        cardTemplateService.deactivateCardTemplate(externalId);
+    }
 }
