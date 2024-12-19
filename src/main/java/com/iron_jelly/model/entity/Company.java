@@ -3,6 +3,7 @@ package com.iron_jelly.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,4 +21,9 @@ public class Company extends Base {
             joinColumns = @JoinColumn(name = "company_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "user_id", nullable = false))
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "company")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<SalesPoint> salesPoints;
 }

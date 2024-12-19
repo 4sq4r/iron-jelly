@@ -75,6 +75,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public User assignOwnerRole(String username) {
+        User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(
+                () -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.USER_NOT_FOUND.getText())
+                        .build());
+        user.setRole(UserRole.OWNER);
+
+        return userRepository.save(user);
+    }
+
     public User findEntityByExternalId(UUID id) {
         return userRepository.findByExternalId(id).orElseThrow(
                 () -> CustomException.builder()
@@ -101,6 +113,15 @@ public class UserService {
 
     private void checkAdminRole(String role) {
         if (!Objects.equals(role, UserRole.ADMIN.name())) {
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.ACCESS_DENIED.getText())
+                    .build();
+        }
+    }
+
+    private void checkOwnerRole(String role) {
+        if (!Objects.equals(role, UserRole.OWNER.name())) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.ACCESS_DENIED.getText())

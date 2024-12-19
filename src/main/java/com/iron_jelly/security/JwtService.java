@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -107,6 +108,15 @@ public class JwtService {
         if (!Objects.equals(getRole(), UserRole.ADMIN.name())) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.UNAUTHORIZED)
+                    .message(MessageSource.ACCESS_DENIED.getText())
+                    .build();
+        }
+    }
+
+    public void checkOwnerRole() {
+        if (!Objects.equals(getRole(), UserRole.ADMIN.name())) {
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.ACCESS_DENIED.getText())
                     .build();
         }
