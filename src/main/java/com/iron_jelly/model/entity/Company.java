@@ -14,7 +14,6 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class Company extends Base {
 
-    @Column(name = "name", nullable = false, length = 30)
     private String name;
     @ManyToMany
     @JoinTable(name = "companies_2_users",

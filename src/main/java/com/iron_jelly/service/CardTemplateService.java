@@ -4,14 +4,13 @@ import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.CardTemplateMapper;
 import com.iron_jelly.model.dto.CardTemplateDTO;
 import com.iron_jelly.model.entity.CardTemplate;
-import com.iron_jelly.model.entity.Company;
+import com.iron_jelly.model.entity.SalesPoint;
 import com.iron_jelly.repository.CardTemplateRepository;
 import com.iron_jelly.security.JwtService;
 import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -20,8 +19,8 @@ public class CardTemplateService {
 
     private final CardTemplateRepository cardTemplateRepository;
     private final CardTemplateMapper cardTemplateMapper;
-    private final CompanyService companyService;
     private final JwtService jwtService;
+    private final SalesPointService salesPointService;
 
 
     public CardTemplateDTO saveOne(CardTemplateDTO cardTemplateDTO) {
@@ -29,8 +28,8 @@ public class CardTemplateService {
         String username = jwtService.getUsername();
 
         CardTemplate cardTemplate = cardTemplateMapper.toEntity(cardTemplateDTO);
-        Company company = companyService.findEntityByExternalId(cardTemplateDTO.getCompanyId());
-        cardTemplate.setCompany(company);
+        SalesPoint salesPoint = salesPointService.findEntityByExternalId(cardTemplateDTO.getSalesPointId());
+        cardTemplate.setSalesPoint(salesPoint);
         cardTemplate.setCreatedBy(username);
         cardTemplate.setUpdatedBy(username);
         cardTemplate.setActive(true);

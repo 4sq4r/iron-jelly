@@ -4,14 +4,18 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Set;
+
 @Data
 @Entity
 @Table(name = "sales_points")
 @EqualsAndHashCode(callSuper = true)
 public class SalesPoint extends Base {
 
-    @Column(name = "name", length = 30, nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "salesPoint")
+    private Set<CardTemplate> cardTemplateSet;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
