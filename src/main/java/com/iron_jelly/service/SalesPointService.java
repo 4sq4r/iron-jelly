@@ -3,7 +3,6 @@ package com.iron_jelly.service;
 import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.SalesPointMapper;
 import com.iron_jelly.model.dto.SalesPointDTO;
-import com.iron_jelly.model.entity.Company;
 import com.iron_jelly.model.entity.SalesPoint;
 import com.iron_jelly.repository.SalesPointRepository;
 import com.iron_jelly.security.JwtService;
@@ -21,7 +20,6 @@ public class SalesPointService {
     private final CompanyService companyService;
     private final SalesPointRepository salesPointRepository;
     private final JwtService jwtService;
-
 
     public void saveOne (SalesPointDTO salesPointDTO) {
         String username = jwtService.getUsername();
