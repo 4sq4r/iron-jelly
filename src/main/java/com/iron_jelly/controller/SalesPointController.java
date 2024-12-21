@@ -5,8 +5,6 @@ import com.iron_jelly.service.SalesPointService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +19,9 @@ public class SalesPointController {
     private final SalesPointService salesPointService;
 
     @PostMapping
-    public ResponseEntity<Void> saveOne(@RequestBody @Valid SalesPointDTO salesPointDTO) {
+    public SalesPointDTO saveOne(@RequestBody @Valid SalesPointDTO salesPointDTO) {
         log.info("Incoming request to save sales point.");
         salesPointService.saveOne(salesPointDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return salesPointService.saveOne(salesPointDTO);
     }
 }

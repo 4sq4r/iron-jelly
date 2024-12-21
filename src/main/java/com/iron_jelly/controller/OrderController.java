@@ -1,5 +1,6 @@
 package com.iron_jelly.controller;
 
+import com.iron_jelly.model.dto.OrderRequestDTO;
 import com.iron_jelly.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,10 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public void saveOne(@RequestBody @Valid UUID externalId) {
+    public void saveOne(@RequestBody @Valid OrderRequestDTO orderRequestDTO) {
         log.info("Incoming request to save order.");
-        orderService.saveOne(externalId);
+        UUID cardExternalId = orderRequestDTO.getCardExternalId();
+        UUID salesPointExternalId = orderRequestDTO.getSalesPointExternalId();
+        orderService.saveOne(cardExternalId, salesPointExternalId);
     }
 }

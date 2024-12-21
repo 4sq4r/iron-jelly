@@ -3,6 +3,7 @@ package com.iron_jelly.service;
 import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.SalesPointMapper;
 import com.iron_jelly.model.dto.SalesPointDTO;
+import com.iron_jelly.model.entity.Company;
 import com.iron_jelly.model.entity.SalesPoint;
 import com.iron_jelly.repository.SalesPointRepository;
 import com.iron_jelly.security.JwtService;
@@ -10,7 +11,6 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
 import java.util.UUID;
 
 @Service
@@ -21,14 +21,16 @@ public class SalesPointService {
     private final SalesPointRepository salesPointRepository;
     private final JwtService jwtService;
 
-    public void saveOne (SalesPointDTO salesPointDTO) {
+    public SalesPointDTO saveOne (SalesPointDTO salesPointDTO) {
         String username = jwtService.getUsername();
-
+        Company company = companyService.findEntityByExternalId(salesPointDTO.getCompanyId());
         SalesPoint salesPoint = salesPointMapper.toEntity(salesPointDTO);
+        salesPoint.setCompany(company);
         salesPoint.setCreatedBy(username);
         salesPoint.setUpdatedBy(username);
-        salesPoint.setCompany(companyService.findEntityByExternalId(salesPointDTO.getCompanyId()));
+
         salesPointRepository.save(salesPoint);
+        return salesPointMapper.toDTO(salesPoint);
     }
 
     public SalesPoint findEntityByExternalId(UUID id) {

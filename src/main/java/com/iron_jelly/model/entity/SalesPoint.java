@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
 import java.util.Set;
 
 @Data
@@ -21,7 +20,7 @@ public class SalesPoint extends Base {
     @EqualsAndHashCode.Exclude
     private Set<CardTemplate> cardTemplates;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "company_id")
     private Company company;
 }
