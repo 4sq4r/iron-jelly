@@ -19,8 +19,15 @@ public class OrderService {
     private final CardService cardService;
     private final JwtService jwtService;
 
-    public void saveOne(UUID externalId) {
-        Card card = cardService.findByExternalId(externalId);
+    public void saveOne(UUID cardExternalId, UUID salesPointExternalId) {
+        Card card = cardService.findByExternalId(cardExternalId);
+
+        if(!card.getCardTemplate().getSalesPoint().getExternalId().equals(salesPointExternalId)) {
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.THIS_CARD_DOES_NOT_BELONG_TO_THIS_POINT_OF_SALE.getText())
+                    .build();
+        }
 
         if(!card.getActive()) {
             throw CustomException.builder()
