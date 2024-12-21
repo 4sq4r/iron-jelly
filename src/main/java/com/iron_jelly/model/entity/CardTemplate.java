@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 public class CardTemplate extends Base {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
-    private Company company;
+    @JoinColumn(name = "sales_point_id", nullable = false)
+    private  SalesPoint salesPoint;
     @Column(name = "title", length = 50)
     private String title;
     @Column(name = "limit_value")

@@ -12,7 +12,9 @@ public enum MessageSource {
     ORDER_NOT_FOUND("Order not found"),
     ACCESS_DENIED("Access denied. Only for admins."),
     CARD_NOT_ACTIVE("Карта неактивна, чтобы сделать заказ воспользуйтесь другой картой"),
-    CARD_TEMPLATE_NOT_ACTIVE("Данный шаблон карты лояльности больше не активен");
+    CARD_TEMPLATE_NOT_ACTIVE("Данный шаблон карты лояльности больше не активен"),
+    SALES_POINT_NOT_FOUND("Sales point not found"),
+    COMPANY_OR_SALES_POINT_NOT_FOUND("Company or sales point not found");
 
     private String text;
 

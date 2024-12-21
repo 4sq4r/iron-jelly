@@ -20,9 +20,7 @@ public class CardTemplateDTO extends BaseDTO {
     private String description;
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private UUID companyId;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private CompanyDTO company;
+    private UUID salesPointId;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean active;
 }

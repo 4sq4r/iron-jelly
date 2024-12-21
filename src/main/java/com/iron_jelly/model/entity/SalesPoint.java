@@ -3,6 +3,9 @@ package com.iron_jelly.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import java.util.Set;
 
 @Data
 @Entity
@@ -10,8 +13,13 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 public class SalesPoint extends Base {
 
-    @Column(name = "name", length = 30, nullable = false)
+    @Column(name = "name", nullable = false, length = 30)
     private String name;
+
+    @OneToMany(mappedBy = "salesPoint")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<CardTemplate> cardTemplates;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
