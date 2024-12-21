@@ -21,8 +21,6 @@ public class CardTemplateDTO extends BaseDTO {
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UUID salesPointId;
-//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-//    private SalesPointDTO salesPointDTO;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Boolean active;
 }

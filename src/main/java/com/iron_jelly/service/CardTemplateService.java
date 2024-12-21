@@ -33,6 +33,7 @@ public class CardTemplateService {
         cardTemplate.setCreatedBy(username);
         cardTemplate.setUpdatedBy(username);
         cardTemplate.setActive(true);
+        salesPoint.getCardTemplates().add(cardTemplate);
         cardTemplateRepository.save(cardTemplate);
         cardTemplateDTO = cardTemplateMapper.toDTO(cardTemplate);
 

@@ -1,7 +1,7 @@
 create table if not exists card_templates
 (
     id          bigint primary key,
-    sales_point_id UUID not null references sales_points (id),
+    sales_point_id bigint not null references sales_points (id),
     limit_value integer,
     expire_days integer,
     description varchar(500),
