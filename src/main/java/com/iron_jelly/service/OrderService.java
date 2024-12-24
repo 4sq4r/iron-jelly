@@ -1,7 +1,6 @@
 package com.iron_jelly.service;
 
 import java.util.UUID;
-import com.iron_jelly.model.dto.OrderRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,17 +19,8 @@ public class OrderService {
     private final CardService cardService;
     private final JwtService jwtService;
 
-    public void saveOne(OrderRequestDTO orderRequestDTO) {
-        UUID cardExternalId = orderRequestDTO.getCardExternalId();
-        UUID salesPointExternalId = orderRequestDTO.getSalesPointExternalId();
-        Card card = cardService.findByExternalId(cardExternalId);
-
-        if(!card.getCardTemplate().getSalesPoint().getExternalId().equals(salesPointExternalId)) {
-            throw CustomException.builder()
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message(MessageSource.THIS_CARD_DOES_NOT_BELONG_TO_THIS_POINT_OF_SALE.getText())
-                    .build();
-        }
+    public void saveOne(UUID externalId) {
+        Card card = cardService.findByExternalId(externalId);
 
         if(!card.getActive()) {
             throw CustomException.builder()
@@ -41,7 +31,7 @@ public class OrderService {
 
         Order order = new Order();
         order.setCard(card);
-        order.setIsFree(checkForFreeOrderAndDeactivateCardIfFree(order, card));
+        order.setIsFree(setOrderFieldIsActiveFalseOrFree(order, card));
         String username = jwtService.getUsername();
         order.setCreatedBy(username);
         order.setUpdatedBy(username);
@@ -49,15 +39,12 @@ public class OrderService {
         cardService.addOrderToCard(card, order);
     }
 
-    public boolean checkForFreeOrderAndDeactivateCardIfFree(Order order, Card card) {
+    public boolean setOrderFieldIsActiveFalseOrFree(Order order, Card card) {
         int countOrdersInCard = card.getOrders().size();
         int limitValueInCardTemplate = order.getCard().getCardTemplate().getLimitValue();
 
         if (countOrdersInCard == limitValueInCardTemplate) {
             cardService.deactivateCard(card);
-            Card newCard = cardService.createNewCardWhenOldIsDeactivated(card);
-            System.out.println("Старая карта деактивирована, создана новая карта с ID: " + newCard.getExternalId());
-
             return true;
         }
 

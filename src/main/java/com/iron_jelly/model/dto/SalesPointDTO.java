@@ -3,6 +3,7 @@ package com.iron_jelly.model.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
 import java.util.UUID;
 
 @Data
@@ -16,5 +17,5 @@ public class SalesPointDTO extends BaseDTO {
     private UUID companyId;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private CompanyDTO company;
+    private CompanyDTO companyDTO;
 }

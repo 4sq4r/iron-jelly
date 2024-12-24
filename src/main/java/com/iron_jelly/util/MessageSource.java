@@ -14,8 +14,7 @@ public enum MessageSource {
     CARD_NOT_ACTIVE("Карта неактивна, чтобы сделать заказ воспользуйтесь другой картой"),
     CARD_TEMPLATE_NOT_ACTIVE("Данный шаблон карты лояльности больше не активен"),
     SALES_POINT_NOT_FOUND("Sales point not found"),
-    COMPANY_OR_SALES_POINT_NOT_FOUND("Company or sales point not found"),
-    THIS_CARD_DOES_NOT_BELONG_TO_THIS_POINT_OF_SALE("This card doesn't belong to this point of sale");
+    COMPANY_OR_SALES_POINT_NOT_FOUND("Company or sales point not found");
 
     private String text;
 
