@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -19,8 +18,6 @@ public class OrderController {
     @PostMapping
     public void saveOne(@RequestBody @Valid OrderRequestDTO orderRequestDTO) {
         log.info("Incoming request to save order.");
-        UUID cardExternalId = orderRequestDTO.getCardExternalId();
-        UUID salesPointExternalId = orderRequestDTO.getSalesPointExternalId();
-        orderService.saveOne(cardExternalId, salesPointExternalId);
+        orderService.saveOne(orderRequestDTO);
     }
 }
