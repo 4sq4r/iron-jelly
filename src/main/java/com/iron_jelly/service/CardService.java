@@ -25,7 +25,6 @@ public class CardService {
     private final UserService userService;
     private final CardTemplateService cardTemplateService;
     private final JwtService jwtService;
-    private final org.springframework.context.MessageSource messageSource;
 
     public CardDTO saveOne(CardDTO cardDTO) {
         CardTemplate cardTemplate = cardTemplateService.findByExternalId(cardDTO.getCardTemplateId());
@@ -96,6 +95,14 @@ public class CardService {
         LocalDate newExpireDay = card.getExpireDate().plusDays(days);
         card.setExpireDate(newExpireDay);
         cardRepository.save(card);
+    }
+
+    public Card createNewCardWhenOldIsDeactivated(Card card) {
+        CardDTO newCardDTO = new CardDTO();
+        newCardDTO.setUserId(card.getUser().getExternalId());
+        newCardDTO.setCardTemplateId(card.getCardTemplate().getExternalId());
+
+        return cardMapper.toEntity(saveOne(newCardDTO));
     }
 }
 

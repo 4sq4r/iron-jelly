@@ -21,7 +21,6 @@ public class SalesPointController {
     @PostMapping
     public SalesPointDTO saveOne(@RequestBody @Valid SalesPointDTO salesPointDTO) {
         log.info("Incoming request to save sales point.");
-        salesPointService.saveOne(salesPointDTO);
         return salesPointService.saveOne(salesPointDTO);
     }
 }
