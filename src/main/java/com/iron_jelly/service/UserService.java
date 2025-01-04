@@ -3,7 +3,9 @@ package com.iron_jelly.service;
 import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.UserMapper;
 import com.iron_jelly.model.dto.AuthDTO;
+import com.iron_jelly.model.dto.CardDTO;
 import com.iron_jelly.model.dto.UserDTO;
+import com.iron_jelly.model.entity.Card;
 import com.iron_jelly.model.entity.User;
 import com.iron_jelly.model.enums.UserRole;
 import com.iron_jelly.repository.UserRepository;
@@ -18,8 +20,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -127,5 +129,31 @@ public class UserService {
                     .message(MessageSource.ACCESS_DENIED.getText())
                     .build();
         }
+    }
+
+    public void addCardToUserCards(Card card) {
+        User user = findEntityByExternalId(card.getUserExternalId());
+        card.setUser(user);
+        user.getCards().add(card);
+        userRepository.save(user);
+    }
+
+    public Set<CardDTO> getUserCards() {
+        String username = jwtService.getUsername();
+        User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(
+                () -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.USER_NOT_FOUND.getText())
+                        .build());
+
+        UserDTO userDTO = userMapper.toDTO(user);
+
+        return userDTO.getCards();
+    }
+
+    public void deleteCardFromSet(Card card) {
+        User user = findEntityByExternalId(card.getUserExternalId());
+        Set<Card> cards = user.getCards();
+        cards.remove(card);
     }
 }

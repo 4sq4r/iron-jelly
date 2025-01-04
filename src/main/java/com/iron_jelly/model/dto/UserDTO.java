@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -20,7 +20,8 @@ public class UserDTO extends BaseDTO {
     private String firstName;
     @NotNull
     private String lastName;
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private UUID companyId;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Set<CardDTO> cards;
 }

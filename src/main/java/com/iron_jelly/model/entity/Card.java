@@ -7,6 +7,7 @@ import lombok.ToString;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -14,9 +15,11 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class Card extends Base {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
+    @Column(name = "user_external_id")
+    private UUID userExternalId;
     @Column(name = "is_active", nullable = false)
     private Boolean active;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

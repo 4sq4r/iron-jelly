@@ -6,7 +6,6 @@ import com.iron_jelly.model.dto.CardDTO;
 import com.iron_jelly.model.entity.Card;
 import com.iron_jelly.model.entity.CardTemplate;
 import com.iron_jelly.model.entity.Order;
-import com.iron_jelly.model.entity.User;
 import com.iron_jelly.repository.CardRepository;
 import com.iron_jelly.security.JwtService;
 import com.iron_jelly.util.MessageSource;
@@ -38,14 +37,15 @@ public class CardService {
 
         String username = jwtService.getUsername();
         Card card = cardMapper.toEntity(cardDTO);
-        User user = userService.findEntityByExternalId(cardDTO.getUserId());
-        card.setUser(user);
+        card.setUserExternalId(cardDTO.getUserExternalId());
+        card.setUser(userService.findEntityByExternalId(cardDTO.getUserExternalId()));
         card.setCardTemplate(cardTemplate);
         card.setActive(true);
         setExpirationDate(card);
         card.setCreatedBy(username);
         card.setUpdatedBy(username);
         cardRepository.save(card);
+        userService.addCardToUserCards(card);
 
         return cardMapper.toDTO(card);
     }
@@ -76,6 +76,7 @@ public class CardService {
 
     public void deactivateCard(Card card) {
         card.setActive(false);
+        userService.deleteCardFromSet(card);
     }
 
     public void addOrderToCard(Card card, Order order) {
@@ -99,7 +100,7 @@ public class CardService {
 
     public Card createNewCardWhenOldIsDeactivated(Card card) {
         CardDTO newCardDTO = new CardDTO();
-        newCardDTO.setUserId(card.getUser().getExternalId());
+        newCardDTO.setUserExternalId(card.getUserExternalId());
         newCardDTO.setCardTemplateId(card.getCardTemplate().getExternalId());
 
         return cardMapper.toEntity(saveOne(newCardDTO));
