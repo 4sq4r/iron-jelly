@@ -15,9 +15,11 @@ import com.iron_jelly.util.MessageSource;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
@@ -31,8 +33,6 @@ class CardServiceTest {
     private static final String USERNAME = "username";
 
     @Mock
-    private CardMapper cardMapper;
-    @Mock
     private CardTemplateService cardTemplateService;
     @Mock
     private JwtService jwtService;
@@ -40,6 +40,8 @@ class CardServiceTest {
     private UserService userService;
     @Mock
     private CardRepository cardRepository;
+    @Spy
+    private CardMapper cardMapper = Mappers.getMapper(CardMapper.class);
     @InjectMocks
     private CardService underTest;
 
@@ -105,7 +107,6 @@ class CardServiceTest {
         cardTemplate.setActive(true);
         when(cardTemplateService.findByExternalId(cardDTO.getCardTemplateId())).thenReturn(cardTemplate);
         when(userService.findEntityByExternalId(cardDTO.getUserId())).thenReturn(user);
-        when(cardMapper.toEntity(cardDTO)).thenReturn(new Card());
         when(cardRepository.save(any())).thenReturn(card);
         //when
         CardDTO result = underTest.saveOne(cardDTO);
