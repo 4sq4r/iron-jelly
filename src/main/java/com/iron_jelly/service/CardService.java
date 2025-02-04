@@ -13,8 +13,10 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -90,14 +92,7 @@ public class CardService {
         card.setExpireDate(newExpireDay);
         cardRepository.save(card);
     }
-
-    public Card createNewCardWhenOldIsDeactivated(Card card) {
-        CardDTO newCardDTO = new CardDTO();
-        newCardDTO.setUserId(card.getUser().getExternalId());
-        newCardDTO.setCardTemplateId(card.getCardTemplate().getExternalId());
-
-        return cardMapper.toEntity(saveOne(newCardDTO));
-    }
 }
+
 
 

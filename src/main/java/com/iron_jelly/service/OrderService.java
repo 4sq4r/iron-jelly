@@ -1,6 +1,8 @@
 package com.iron_jelly.service;
 
 import java.util.UUID;
+
+import com.iron_jelly.model.dto.CardDTO;
 import com.iron_jelly.model.dto.OrderRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,7 +43,7 @@ public class OrderService {
 
         Order order = new Order();
         order.setCard(card);
-        order.setIsFree(checkForFreeOrderAndDeactivateCardIfFree(order, card));
+        order.setIsFree(checkForFreeOrderAndDeactivateCardIfFreeAndCreateNewOne(order, card));
         String username = jwtService.getUsername();
         order.setCreatedBy(username);
         order.setUpdatedBy(username);
@@ -49,14 +51,17 @@ public class OrderService {
         cardService.addOrderToCard(card, order);
     }
 
-    public boolean checkForFreeOrderAndDeactivateCardIfFree(Order order, Card card) {
+    public boolean checkForFreeOrderAndDeactivateCardIfFreeAndCreateNewOne(Order order, Card card) {
         int countOrdersInCard = card.getOrders().size();
         int limitValueInCardTemplate = order.getCard().getCardTemplate().getLimitValue();
 
         if (countOrdersInCard == limitValueInCardTemplate) {
             cardService.deactivateCard(card);
-            Card newCard = cardService.createNewCardWhenOldIsDeactivated(card);
-            System.out.println("Старая карта деактивирована, создана новая карта с ID: " + newCard.getExternalId());
+            CardDTO newCardDTO = new CardDTO();
+            newCardDTO.setUserId(card.getUser().getExternalId());
+            newCardDTO.setCardTemplateId(card.getCardTemplate().getExternalId());
+            cardService.saveOne(newCardDTO);
+            System.out.println("Старая карта деактивирована, создана новая карта с ID: " + newCardDTO.getExternalId());
 
             return true;
         }
