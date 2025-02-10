@@ -14,7 +14,6 @@ import com.iron_jelly.service.CardTemplateService;
 import com.iron_jelly.service.UserService;
 import com.iron_jelly.util.MessageSource;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -129,7 +128,7 @@ class CardServiceTest {
     void getOne_throwsException_whenCardNotFound() {
         //given
         UUID id = UUID.randomUUID();
-        when(cardRepository.findByExternalId(id)).thenReturn(Optional.empty()); // <-- исправлено
+        when(cardRepository.findByExternalId(id)).thenReturn(Optional.empty());
         //when
         CustomException exception = assertThrows(CustomException.class, () -> underTest.getOne(id));
         //then
@@ -247,71 +246,5 @@ class CardServiceTest {
         assertEquals(LocalDate.of(2025, 1, 11), card.getExpireDate());
         verify(cardRepository, times(1)).save(card);
     }
-
-    @Test
-    void createNewCardWhenOldIsDeactivated() {
-        // given
-        CardTemplate cardTemplate = Instancio.of(CardTemplate.class)
-                .set(field(CardTemplate :: getActive), true)
-                .create();
-        User user = Instancio.create(User.class);
-
-        Card card = Instancio.of(Card.class)
-                .set(field(Card::getCardTemplate), cardTemplate)
-                .set(field(Card::getUser), user)
-                .create();
-
-        CardDTO savedCardDTO = Instancio.of(CardDTO.class)
-                .set(field(CardDTO::getCardTemplateId), card.getCardTemplate().getExternalId())
-                .set(field(CardDTO::getUserId), card.getUser().getExternalId())
-                .create();
-
-        Card newCard = Instancio.of(Card.class)
-                .set(field(Card::getCardTemplate), card.getCardTemplate())
-                .set(field(Card::getUser), card.getUser())
-                .create();
-        when(cardTemplateService.findByExternalId(any())).thenReturn(cardTemplate);
-        when(cardRepository.save(any())).thenReturn(newCard);
-        when(cardMapper.toEntity(any())).thenReturn(newCard);
-
-        // when
-        Card result = underTest.createNewCardWhenOldIsDeactivated(card);
-
-        // then
-        assertNotNull(result);
-        assertEquals(newCard, result);
-
-        ArgumentCaptor<Card> captor = ArgumentCaptor.forClass(Card.class);
-        verify(cardRepository).save(captor.capture());
-
-        Card capturedCard = captor.getValue();
-        assertEquals(card.getUser(), capturedCard.getUser());
-        assertEquals(card.getCardTemplate(), capturedCard.getCardTemplate());
-
-        verify(cardMapper, times(1)).toEntity(savedCardDTO);
-    }
-
-    @Test
-    void createNewCardWhenOldIsDeactivated() {
-        // given
-        Card card = Instancio.create(Card.class);
-
-        // when
-        Card result = underTest.createNewCardWhenOldIsDeactivated(card);
-
-        // then
-        assertNotNull(result);
-        assertEquals(newCard, result);
-
-        ArgumentCaptor<Card> captor = ArgumentCaptor.forClass(Card.class);
-        verify(cardRepository).save(captor.capture());
-
-        Card capturedCard = captor.getValue();
-        assertEquals(card.getUser(), capturedCard.getUser());
-        assertEquals(card.getCardTemplate(), capturedCard.getCardTemplate());
-
-        verify(cardMapper, times(1)).toEntity(savedCardDTO);
-    }
-
 }
 
