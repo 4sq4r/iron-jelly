@@ -3,6 +3,7 @@ package service;
 import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.mapper.CardTemplateMapper;
 import com.iron_jelly.model.dto.CardTemplateDTO;
+import com.iron_jelly.model.dto.CompanyDTO;
 import com.iron_jelly.model.entity.CardTemplate;
 import com.iron_jelly.model.entity.SalesPoint;
 import com.iron_jelly.repository.CardTemplateRepository;
@@ -22,6 +23,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.instancio.Select.field;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -45,26 +47,26 @@ public class CardTemplateServiceTest {
     @InjectMocks
     private CardTemplateService underTest;
 
+
     @Test
     void saveOne_saveCardTemplate() {
         //given
-        CardTemplateDTO inputDTO = new CardTemplateDTO();
-        CardTemplate cardTemplate = new CardTemplate();
-        SalesPoint salesPoint = new SalesPoint();
-        salesPoint.setCardTemplates(new HashSet<>());
-        CardTemplateDTO expectedDTO = new CardTemplateDTO();
-        when(jwtService.getUsername()).thenReturn("testUser");
-        when(cardTemplateMapper.toEntity(inputDTO)).thenReturn(cardTemplate);
-        when(salesPointService.findEntityByExternalId(any())).thenReturn(salesPoint);
-        when(cardTemplateRepository.save(cardTemplate)).thenReturn(cardTemplate);
-        when(cardTemplateMapper.toDTO(cardTemplate)).thenReturn(expectedDTO);
+        SalesPoint salesPoint = Instancio.create(SalesPoint.class);
+        CardTemplateDTO cardTemplateDTO = Instancio.of(CardTemplateDTO.class)
+                .set(field(CardTemplateDTO::getSalesPointId), salesPoint.getExternalId())
+                .create();
+        when(jwtService.getUsername()).thenReturn("testName");
+        CardTemplate cardTemplate = Instancio.create(CardTemplate.class);
+        when(cardTemplateMapper.toEntity(cardTemplateDTO)).thenReturn(cardTemplate);
+        when(salesPointService.findEntityByExternalId(cardTemplateDTO.getSalesPointId())).thenReturn(salesPoint);
+        when(cardTemplateMapper.toDTO(cardTemplate)).thenReturn(cardTemplateDTO);
         //when
-        CardTemplateDTO resultDTO = underTest.saveOne(inputDTO);
+        CardTemplateDTO resultDTO = underTest.saveOne(cardTemplateDTO);
         //then
         assertNotNull(resultDTO);
-        assertEquals(expectedDTO, resultDTO);
-        assertEquals("testUser", cardTemplate.getCreatedBy());
-        assertEquals("testUser", cardTemplate.getUpdatedBy());
+        assertEquals(cardTemplateDTO, resultDTO);
+        assertEquals("testName", cardTemplate.getCreatedBy());
+        assertEquals("testName", cardTemplate.getUpdatedBy());
         assertTrue(cardTemplate.getActive());
         assertTrue(salesPoint.getCardTemplates().contains(cardTemplate));
     }
