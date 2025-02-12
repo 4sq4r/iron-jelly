@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.UUID;
 
 @SpringBootTest
-class IronJellyApplicationTests {
+public class IronJellyApplicationTests {
 
 	@Test
 	void contextLoads() {

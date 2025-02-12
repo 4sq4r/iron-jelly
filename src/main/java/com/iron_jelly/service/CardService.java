@@ -13,8 +13,10 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class CardService {
     public CardDTO saveOne(CardDTO cardDTO) {
         CardTemplate cardTemplate = cardTemplateService.findByExternalId(cardDTO.getCardTemplateId());
 
-        if(!cardTemplate.getActive()) {
+        if (!cardTemplate.getActive()) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.CARD_TEMPLATE_NOT_ACTIVE.getText())
@@ -42,7 +44,7 @@ public class CardService {
         card.setUser(user);
         card.setCardTemplate(cardTemplate);
         card.setActive(true);
-        setExpirationDate(card);
+        card.setExpireDate(LocalDate.now().plusDays(card.getCardTemplate().getExpireDays()));
         card.setCreatedBy(username);
         card.setUpdatedBy(username);
         cardRepository.save(card);
@@ -84,26 +86,13 @@ public class CardService {
         cardRepository.save(card);
     }
 
-    public void setExpirationDate(Card card) {
-        LocalDate today = LocalDate.now();
-        LocalDate expireDay = today.plusDays(card.getCardTemplate().getExpireDays());
-        card.setExpireDate(expireDay);
-    }
-
     public void extendExpirationDate(int days, Long id) {
         Card card = findById(id);
         LocalDate newExpireDay = card.getExpireDate().plusDays(days);
         card.setExpireDate(newExpireDay);
         cardRepository.save(card);
     }
-
-    public Card createNewCardWhenOldIsDeactivated(Card card) {
-        CardDTO newCardDTO = new CardDTO();
-        newCardDTO.setUserId(card.getUser().getExternalId());
-        newCardDTO.setCardTemplateId(card.getCardTemplate().getExternalId());
-
-        return cardMapper.toEntity(saveOne(newCardDTO));
-    }
 }
+
 
 
