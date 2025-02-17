@@ -19,6 +19,11 @@ public class User extends Base {
     private String firstName;
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
+    @Column(name = "phone_number", nullable = false, length = 12)
+    private String phoneNumber;
+    @Column(name = "email", nullable = false, length = 30)
+    private String email;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
