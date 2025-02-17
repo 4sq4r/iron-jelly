@@ -43,7 +43,7 @@ public class UserService {
 
         String username = jwtService.getUsername();
         formatDTO(userDTO);
-        checkUsernameUniqueness(userDTO.getUsername());
+        checkUsernameUniqueness(userDTO.getEmail());
         User user = userMapper.toEntity(userDTO);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(isEmployee ? UserRole.EMPLOYEE : UserRole.GUEST);
@@ -105,10 +105,11 @@ public class UserService {
     }
 
     public void formatDTO(UserDTO userDTO) {
-        userDTO.setUsername(userDTO.getUsername().trim());
+        userDTO.setEmail(userDTO.getEmail().trim());
         userDTO.setPassword(userDTO.getPassword().trim());
         userDTO.setFirstName(userDTO.getFirstName().trim());
         userDTO.setLastName(userDTO.getLastName().trim());
+        userDTO.setPhoneNumber(userDTO.getPhoneNumber().trim());
     }
 
     private void checkAdminRole(String role) {

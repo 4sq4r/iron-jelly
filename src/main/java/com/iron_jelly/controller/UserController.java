@@ -21,7 +21,7 @@ public class UserController {
 
     @PostMapping
     public UserDTO register(@RequestBody @Valid UserDTO userDTO) {
-        log.info("Incoming request to save user: {}", userDTO.getUsername());
+        log.info("Incoming request to save user: {}", userDTO.getEmail());
         return userService.saveOne(userDTO);
     }
 
