@@ -1,12 +1,13 @@
 server:
   port: 8080
+
 spring:
   application:
     name: iron-jelly
   datasource:
-    url: jdbc:postgresql://postgres-db:5432/postgres
-    username: iron_jelly
-    password: i2n3cx13ans2612a
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -14,11 +15,16 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    url: jdbc:postgresql://postgres-db:5432/postgres
-    user: iron_jelly
-    password: i2n3cx13ans2612a
+    url: ${SPRING_DATASOURCE_URL}
+    user: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
 jwt:
   issuer: iron-jelly
   secret: nacechrn98a3912y41231
   expirationHours: 24
+
+logging:
+  level:
+    org.springframework: DEBUG
+    org.hibernate.SQL: DEBUG
