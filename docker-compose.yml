@@ -3,7 +3,7 @@ services:
   database:
     image: postgres:17
     container_name: postgres-db
-    restart: always
+    restart:  no
     environment:
       POSTGRES_USER: iron_jelly
       POSTGRES_PASSWORD: i2n3cx13ans2612a
