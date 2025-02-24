@@ -15,7 +15,6 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   flyway:
-    enabled: false
     url: ${SPRING_DATASOURCE_URL}
     user: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
@@ -27,5 +26,5 @@ jwt:
 
 logging:
   level:
-    org.springframework: DEBUG
-    org.hibernate.SQL: DEBUG
+    org.springframework:  INFO
+    org.hibernate.SQL: INFO
