@@ -31,10 +31,13 @@ public class SecurityConfiguration {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.requestMatchers(
-                                new MvcRequestMatcher(introspector, "/users/v1/**")).permitAll()
-                        .anyRequest()
-                        .fullyAuthenticated())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(new MvcRequestMatcher(introspector, "/v3/api-docs/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(introspector, "/swagger-ui/**")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(introspector, "/swagger-ui.html")).permitAll()
+                        .requestMatchers(new MvcRequestMatcher(introspector, "/users/v1/**")).permitAll()
+                        .anyRequest().fullyAuthenticated()
+                )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
