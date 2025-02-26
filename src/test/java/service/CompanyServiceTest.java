@@ -68,7 +68,7 @@ public class CompanyServiceTest {
         CompanyDTO companyDTO = Instancio.create(CompanyDTO.class);
         Company company = Instancio.create(Company.class);
         User user = Instancio.create(User.class);
-        when(jwtService.getUsername()).thenReturn(user.getUsername());
+        when(jwtService.getUsername()).thenReturn(user.getEmail());
         when(companyMapper.toEntity(companyDTO)).thenReturn(company);
         when(userService.assignAdminRole(any())).thenReturn(user);
         when(companyMapper.toDTO(company)).thenReturn(companyDTO);

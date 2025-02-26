@@ -64,8 +64,8 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public User assignAdminRole(String username) {
-        User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(
+    public User assignAdminRole(String email) {
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.USER_NOT_FOUND.getText())
@@ -76,8 +76,8 @@ public class UserService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public User assignOwnerRole(String username) {
-        User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(
+    public User assignOwnerRole(String email) {
+        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(
                 () -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.USER_NOT_FOUND.getText())
@@ -95,8 +95,8 @@ public class UserService {
                         .build());
     }
 
-    public void checkUsernameUniqueness(String username) {
-        if (userRepository.existsByUsernameIgnoreCase(username)) {
+    public void checkUsernameUniqueness(String email) {
+        if (userRepository.existsByEmailIgnoreCase(email)) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.USERNAME_ALREADY_EXISTS.getText())
