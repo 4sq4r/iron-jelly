@@ -30,6 +30,7 @@ public class UserController {
 
     @Operation(summary = "Логин пользователя")
     @ApiResponse(responseCode = "204", description = "метод для логина пользователя")
+    @ApiResponse(responseCode = "401", description = "неверно введен логин или пароль")
     @PostMapping("/login")
     public AuthDTO login(@RequestBody @Valid AuthDTO authDTO) {
         return userService.login(authDTO);
