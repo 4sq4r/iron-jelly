@@ -34,7 +34,10 @@ public class CardService {
         CardTemplate cardTemplate = cardTemplateService.findByExternalId(cardDTO.getCardTemplateId());
 
         if (!cardTemplate.getActive()) {
-            throw CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.CARD_TEMPLATE_NOT_ACTIVE.getText()).build();
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.CARD_TEMPLATE_NOT_ACTIVE.getText())
+                    .build();
         }
 
         String username = jwtService.getUsername();
@@ -68,7 +71,10 @@ public class CardService {
     }
 
     public Card findById(Long id) {
-        return cardRepository.findById(id).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.CARD_NOT_FOUND.getText()).build());
+        return cardRepository.findById(id).orElseThrow(() -> CustomException.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(MessageSource.CARD_NOT_FOUND.getText())
+                .build());
     }
 
     public void deactivateCard(Card card) {

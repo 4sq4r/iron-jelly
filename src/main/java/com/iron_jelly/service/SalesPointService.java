@@ -35,6 +35,10 @@ public class SalesPointService {
     }
 
     public SalesPoint findEntityByExternalId(UUID id) {
-        return salesPointRepository.findByExternalId(id).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.SALES_POINT_NOT_FOUND.getText(id.toString())).build());
+        return salesPointRepository.findByExternalId(id)
+                .orElseThrow(() -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.SALES_POINT_NOT_FOUND.getText(id.toString()))
+                        .build());
     }
 }

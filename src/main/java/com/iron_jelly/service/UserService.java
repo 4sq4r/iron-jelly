@@ -64,7 +64,11 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public User assignAdminRole(String email) {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.USER_NOT_FOUND.getText()).build());
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.USER_NOT_FOUND.getText())
+                        .build());
         user.setRole(UserRole.ADMIN);
 
         return userRepository.save(user);
@@ -72,19 +76,29 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public User assignOwnerRole(String email) {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.USER_NOT_FOUND.getText()).build());
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.USER_NOT_FOUND.getText())
+                        .build());
         user.setRole(UserRole.OWNER);
 
         return userRepository.save(user);
     }
 
     public User findEntityByExternalId(UUID id) {
-        return userRepository.findByExternalId(id).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.USER_NOT_FOUND.getText()).build());
+        return userRepository.findByExternalId(id).orElseThrow(() -> CustomException
+                .builder().httpStatus(HttpStatus.BAD_REQUEST)
+                .message(MessageSource.USER_NOT_FOUND.getText())
+                .build());
     }
 
     public void checkUsernameUniqueness(String email) {
         if (userRepository.existsByEmailIgnoreCase(email)) {
-            throw CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.USERNAME_ALREADY_EXISTS.getText()).build();
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.USERNAME_ALREADY_EXISTS.getText())
+                    .build();
         }
     }
 
@@ -98,13 +112,19 @@ public class UserService {
 
     private void checkAdminRole(String role) {
         if (!Objects.equals(role, UserRole.ADMIN.name())) {
-            throw CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.ACCESS_DENIED.getText()).build();
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.ACCESS_DENIED.getText())
+                    .build();
         }
     }
 
     private void checkOwnerRole(String role) {
         if (!Objects.equals(role, UserRole.OWNER.name())) {
-            throw CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.ACCESS_DENIED.getText()).build();
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.ACCESS_DENIED.getText())
+                    .build();
         }
     }
 }

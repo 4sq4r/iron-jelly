@@ -51,11 +51,20 @@ public class CardTemplateService {
     }
 
     public CardTemplate findByExternalId(UUID externalId) {
-        return cardTemplateRepository.findByExternalId(externalId).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.CARD_TEMPLATE_NOT_FOUND.getText()).build());
+        return cardTemplateRepository.findByExternalId(externalId)
+                .orElseThrow(() -> CustomException.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(MessageSource.CARD_TEMPLATE_NOT_FOUND.getText())
+                .build());
     }
 
     public void deactivateCardTemplate(UUID externalId) {
-        CardTemplate cardTemplate = cardTemplateRepository.findByExternalId(externalId).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.CARD_TEMPLATE_NOT_FOUND.getText()).build());
+        CardTemplate cardTemplate = cardTemplateRepository.findByExternalId(externalId)
+                .orElseThrow(() -> CustomException.builder()
+                        .httpStatus(HttpStatus.BAD_REQUEST)
+                        .message(MessageSource.CARD_TEMPLATE_NOT_FOUND.getText())
+                        .build());
+
         cardTemplate.setActive(false);
         cardTemplateRepository.save(cardTemplate);
     }

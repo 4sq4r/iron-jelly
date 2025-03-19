@@ -28,11 +28,17 @@ public class OrderService {
         Card card = cardService.findByExternalId(cardExternalId);
 
         if (!card.getCardTemplate().getSalesPoint().getExternalId().equals(salesPointExternalId)) {
-            throw CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.THIS_CARD_DOES_NOT_BELONG_TO_THIS_POINT_OF_SALE.getText()).build();
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.THIS_CARD_DOES_NOT_BELONG_TO_THIS_POINT_OF_SALE.getText())
+                    .build();
         }
 
         if (!card.getActive()) {
-            throw CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.CARD_NOT_ACTIVE.getText()).build();
+            throw CustomException.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(MessageSource.CARD_NOT_ACTIVE.getText())
+                    .build();
         }
 
         Order order = new Order();
