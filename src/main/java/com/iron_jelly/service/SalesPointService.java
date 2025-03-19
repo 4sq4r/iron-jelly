@@ -11,6 +11,7 @@ import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
 @Service
@@ -21,7 +22,7 @@ public class SalesPointService {
     private final SalesPointRepository salesPointRepository;
     private final JwtService jwtService;
 
-    public SalesPointDTO saveOne (SalesPointDTO salesPointDTO) {
+    public SalesPointDTO saveOne(SalesPointDTO salesPointDTO) {
         String username = jwtService.getUsername();
         Company company = companyService.findEntityByExternalId(salesPointDTO.getCompanyId());
         SalesPoint salesPoint = salesPointMapper.toEntity(salesPointDTO);
@@ -34,10 +35,6 @@ public class SalesPointService {
     }
 
     public SalesPoint findEntityByExternalId(UUID id) {
-        return salesPointRepository.findByExternalId(id).orElseThrow(
-                () -> CustomException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message(MessageSource.SALES_POINT_NOT_FOUND.getText(id.toString()))
-                        .build());
+        return salesPointRepository.findByExternalId(id).orElseThrow(() -> CustomException.builder().httpStatus(HttpStatus.BAD_REQUEST).message(MessageSource.SALES_POINT_NOT_FOUND.getText(id.toString())).build());
     }
 }

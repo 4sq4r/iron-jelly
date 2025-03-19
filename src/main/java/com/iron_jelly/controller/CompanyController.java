@@ -46,8 +46,7 @@ public class CompanyController {
     @Operation(summary = "Обновить инфу о компании")
     @ApiResponse(responseCode = "204", description = "метод для обновления инфы о компании")
     @PutMapping("/{id}")
-    public CompanyDTO updateOne(@PathVariable UUID id,
-                                @RequestBody @Valid CompanyDTO companyDTO) {
+    public CompanyDTO updateOne(@PathVariable UUID id, @RequestBody @Valid CompanyDTO companyDTO) {
         return companyService.updateOne(id, companyDTO);
     }
 }
