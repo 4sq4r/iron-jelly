@@ -11,5 +11,6 @@ import java.util.UUID;
 @Repository
 public interface CardRepository extends JpaRepository<Card, Long> {
     Optional<Card> findByExternalId(UUID externalId);
+    List<Card> findCardsByUserExternalIdAndActiveIsTrue(UUID externalId);
     List<Card> findAllByExpireDateBeforeAndActive(LocalDate date, boolean active);
 }

@@ -28,6 +28,7 @@ public class CardTemplateController {
 
     @Operation(summary = "Получение шаблона карты лояльности по UUID")
     @ApiResponse(responseCode = "201", description = "метод дляполучение шаблона карты лояльности по UUID")
+    @ApiResponse(responseCode = "400", description = "шаблон карты не найден")
     @GetMapping("/{externalId}")
     public CardTemplateDTO getOne(@PathVariable UUID externalId) {
         log.info("Incoming request to get card template with externalId: {}", externalId);
@@ -36,6 +37,7 @@ public class CardTemplateController {
 
     @Operation(summary = "Удаление шаблона карты лояльности")
     @ApiResponse(responseCode = "204", description = "метод для удаления шаблона карты лояльности")
+    @ApiResponse(responseCode = "400", description = "шаблон карты не найден")
     @DeleteMapping("/{externalId}")
     public void deleteOne(@PathVariable UUID externalId) {
         log.info("Incoming request to delete user with id: {}", externalId);
@@ -44,6 +46,7 @@ public class CardTemplateController {
 
     @Operation(summary = "Деактивировать шаблон карты лояльности")
     @ApiResponse(responseCode = "204", description = "метод для деактивации шаблона карты лояльности")
+    @ApiResponse(responseCode = "400", description = "шаблон карты не найден")
     @PutMapping("/{externalId}/deactivate")
     public void deactivateCardTemplate(@PathVariable UUID externalId) {
         cardTemplateService.deactivateCardTemplate(externalId);

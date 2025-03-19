@@ -9,7 +9,7 @@ public class AuthDTO {
 
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String username;
+    private String email;
     @NotNull
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

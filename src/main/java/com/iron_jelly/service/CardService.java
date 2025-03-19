@@ -15,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,12 +70,11 @@ public class CardService {
                         .build());
     }
 
-    public Card findById(Long id){
-        return cardRepository.findById(id).orElseThrow(
-                () -> CustomException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message(MessageSource.CARD_NOT_FOUND.getText())
-                        .build());
+    public Card findById(Long id) {
+        return cardRepository.findById(id).orElseThrow(() -> CustomException.builder()
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(MessageSource.CARD_NOT_FOUND.getText())
+                .build());
     }
 
     public void deactivateCard(Card card) {
@@ -92,7 +93,14 @@ public class CardService {
         card.setExpireDate(newExpireDay);
         cardRepository.save(card);
     }
+
+    public List<CardDTO> getUserActiveCards(UUID userExternalId) {
+        List<Card> activeUserCards = cardRepository.findCardsByUserExternalIdAndActiveIsTrue(userExternalId);
+
+        return activeUserCards.stream().map(cardMapper::toDTO).collect(Collectors.toList());
+    }
 }
+
 
 
 

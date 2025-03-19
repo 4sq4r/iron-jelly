@@ -29,6 +29,7 @@ public class CompanyController {
 
     @Operation(summary = "Получить компанию по UUID")
     @ApiResponse(responseCode = "201", description = "метод для получения компании по UUID")
+    @ApiResponse(responseCode = "400", description = "компания не найдена")
     @GetMapping("/{id}")
     public CompanyDTO getOne(@PathVariable UUID id) {
         log.info("Incoming request to get company with id: {}", id);
@@ -37,6 +38,7 @@ public class CompanyController {
 
     @Operation(summary = "Удалить компанию")
     @ApiResponse(responseCode = "204", description = "метод для удаления компании")
+    @ApiResponse(responseCode = "400", description = "компания не найдена")
     @DeleteMapping("/{id}")
     public void deleteOne(@PathVariable UUID id) {
         log.info("Incoming request to delete company with id: {}", id);
@@ -45,9 +47,9 @@ public class CompanyController {
 
     @Operation(summary = "Обновить инфу о компании")
     @ApiResponse(responseCode = "204", description = "метод для обновления инфы о компании")
+    @ApiResponse(responseCode = "400", description = "компания не найдена")
     @PutMapping("/{id}")
-    public CompanyDTO updateOne(@PathVariable UUID id,
-                                @RequestBody @Valid CompanyDTO companyDTO) {
+    public CompanyDTO updateOne(@PathVariable UUID id, @RequestBody @Valid CompanyDTO companyDTO) {
         return companyService.updateOne(id, companyDTO);
     }
 }

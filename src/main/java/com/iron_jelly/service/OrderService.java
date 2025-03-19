@@ -1,18 +1,18 @@
 package com.iron_jelly.service;
 
-import java.util.UUID;
-
+import com.iron_jelly.exception.CustomException;
 import com.iron_jelly.model.dto.CardDTO;
 import com.iron_jelly.model.dto.OrderRequestDTO;
+import com.iron_jelly.model.entity.Card;
+import com.iron_jelly.model.entity.Order;
+import com.iron_jelly.repository.OrderRepository;
+import com.iron_jelly.security.JwtService;
+import com.iron_jelly.util.MessageSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import com.iron_jelly.model.entity.Card;
-import com.iron_jelly.model.entity.Order;
-import com.iron_jelly.util.MessageSource;
-import com.iron_jelly.security.JwtService;
-import com.iron_jelly.exception.CustomException;
-import com.iron_jelly.repository.OrderRepository;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,14 +27,14 @@ public class OrderService {
         UUID salesPointExternalId = orderRequestDTO.getSalesPointExternalId();
         Card card = cardService.findByExternalId(cardExternalId);
 
-        if(!card.getCardTemplate().getSalesPoint().getExternalId().equals(salesPointExternalId)) {
+        if (!card.getCardTemplate().getSalesPoint().getExternalId().equals(salesPointExternalId)) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.THIS_CARD_DOES_NOT_BELONG_TO_THIS_POINT_OF_SALE.getText())
                     .build();
         }
 
-        if(!card.getActive()) {
+        if (!card.getActive()) {
             throw CustomException.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .message(MessageSource.CARD_NOT_ACTIVE.getText())
