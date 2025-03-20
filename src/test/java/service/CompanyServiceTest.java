@@ -50,9 +50,7 @@ public class CompanyServiceTest {
     @Test
     void saveOne_throwsException_whenNameLengthMoreThen_30() {
         //given
-        CompanyDTO companyDTO = Instancio.of(CompanyDTO.class)
-                .set(field(CompanyDTO::getName), "testNameTestNameTestNameTestNameTestNameTestName")
-                .create();
+        CompanyDTO companyDTO = Instancio.of(CompanyDTO.class).set(field(CompanyDTO::getName), "testNameTestNameTestNameTestNameTestNameTestName").create();
         when(jwtService.getUsername()).thenReturn("testName");
         //when
         CustomException exception = assertThrows(CustomException.class, () -> underTest.saveOne(companyDTO));

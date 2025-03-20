@@ -55,8 +55,7 @@ public class UserService {
     }
 
     public AuthDTO login(AuthDTO authDTO) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authDTO.getUsername(), authDTO.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authDTO.getEmail(), authDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         authDTO.setToken(jwtService.generateToken(authentication));
 
@@ -65,8 +64,8 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public User assignAdminRole(String email) {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(
-                () -> CustomException.builder()
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.USER_NOT_FOUND.getText())
                         .build());
@@ -77,8 +76,8 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public User assignOwnerRole(String email) {
-        User user = userRepository.findByEmailIgnoreCase(email).orElseThrow(
-                () -> CustomException.builder()
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> CustomException.builder()
                         .httpStatus(HttpStatus.BAD_REQUEST)
                         .message(MessageSource.USER_NOT_FOUND.getText())
                         .build());
@@ -88,11 +87,10 @@ public class UserService {
     }
 
     public User findEntityByExternalId(UUID id) {
-        return userRepository.findByExternalId(id).orElseThrow(
-                () -> CustomException.builder()
-                        .httpStatus(HttpStatus.BAD_REQUEST)
-                        .message(MessageSource.USER_NOT_FOUND.getText())
-                        .build());
+        return userRepository.findByExternalId(id).orElseThrow(() -> CustomException
+                .builder().httpStatus(HttpStatus.BAD_REQUEST)
+                .message(MessageSource.USER_NOT_FOUND.getText())
+                .build());
     }
 
     public void checkUsernameUniqueness(String email) {
