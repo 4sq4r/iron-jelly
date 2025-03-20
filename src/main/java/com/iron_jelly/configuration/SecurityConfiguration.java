@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers(new MvcRequestMatcher(introspector, "/swagger-ui/**")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(introspector, "/swagger-ui.html")).permitAll()
                         .requestMatchers(new MvcRequestMatcher(introspector, "/users/v1/**")).permitAll()
-                        .anyRequest().fullyAuthenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
