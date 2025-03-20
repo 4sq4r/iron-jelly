@@ -1,0 +1,39 @@
+
+services:
+  database:
+    image: postgres:17
+    container_name: database
+    restart:  on-failure
+    environment:
+      POSTGRES_USER: iron_jelly
+      POSTGRES_PASSWORD: i2n3cx13ans2612a
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    image: iron-jelly
+    container_name: iron-jelly-app
+    restart: always
+    build: .
+    depends_on:
+      - database
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://database:5432/postgres
+      SPRING_DATASOURCE_USERNAME: iron_jelly
+      SPRING_DATASOURCE_PASSWORD: i2n3cx13ans2612a
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  pgdata:
